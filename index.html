@@ -144,14 +144,22 @@
             document.getElementById('main-ui').style.display = 'block';
             document.getElementById('header-user').innerText = user.phoneNumber;
 
-            // 1. استماع مباشر للسعر
             db.collection('settings').doc('prices').onSnapshot(s => {
                 if(s.exists) {
-                    srmdPrice = s.data().srmd_price || 0.05;
+                    srmdPrice = s.data().srmd_price || 0;
                     document.getElementById('current-price').innerText = srmdPrice;
-                    updateUI(null); // تحديث القيمة الإجمالية
+                    console.log("Price Loaded: ", srmdPrice);
+                    updateUI(null); 
+                } else {
+                    console.error("Document settings/prices NOT FOUND!");
+                    // تنبيه مؤقت للتأكد من وجود البيانات
+                    alert("تنبيه: لم يتم العثور على وثيقة السعر في المسار settings/prices");
                 }
+            }, err => {
+                console.error("Firestore Error: ", err.message);
+                alert("خطأ في الوصول لقاعدة البيانات: " + err.message);
             });
+
 
             // 2. استماع مباشر لبيانات المستثمر (رصيد + سجل)
             db.collection('investors').doc(user.phoneNumber).onSnapshot(doc => {
