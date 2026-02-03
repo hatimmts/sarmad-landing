@@ -6,19 +6,27 @@
     <title>Sarmad Protocol | Investor Wallet</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #000; --white: #ffffff; --grey: #555; }
+        :root { --gold: #d4af37; --bg: #000; --white: #ffffff; --grey: #888; }
         body { background: var(--bg); color: var(--white); font-family: sans-serif; margin: 0; }
         .ar-mode { font-family: 'Tajawal', sans-serif; }
         header { background: #000; padding: 20px 15px 10px 15px; border-bottom: 2px solid var(--gold); }
         .logo-container { text-align: center; margin-bottom: 15px; }
         .logo { font-family: 'Orbitron', sans-serif; color: var(--white); font-size: 1.5rem; letter-spacing: 2px; }
-        .sub-header { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto; }
+        .sub-header { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 10px auto; }
         .user-id { font-size: 0.75rem; color: var(--white); border: 1px solid #333; padding: 5px 12px; border-radius: 20px; }
         .clickable { color: var(--gold); border: 1px solid var(--gold); background: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .clickable:disabled { color: var(--grey); border-color: var(--grey); cursor: not-allowed; opacity: 0.6; }
         .container { max-width: 500px; margin: auto; padding: 20px; }
-        .card { background: #0a0a0a; border: 1px solid #222; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .balance-val { font-size: 2.5rem; font-weight: bold; color: var(--white); display: block; margin: 5px 0; }
+        .card { background: #0a0a0a; border: 1px solid #222; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; }
+        
+        /* عدادات المشروع */
+        .stats-box { display: flex; justify-content: space-around; padding: 15px 0; margin-bottom: 10px; border-bottom: 1px solid #222; }
+        .stat-item { flex: 1; }
+        .stat-label { display: block; font-size: 0.65rem; color: var(--grey); margin-bottom: 5px; text-transform: uppercase; }
+        .stat-val { font-size: 1.2rem; font-weight: bold; color: var(--gold); font-family: 'Orbitron', sans-serif; }
+
+        .balance-val { font-size: 2.5rem; font-weight: bold; color: var(--white); display: block; margin: 10px 0; }
+        .price-text { direction: ltr !important; unicode-bidi: bidi-override; display: inline-block; font-size: 0.85rem; border: none !important; padding: 0 !important; }
         .usd-val { font-size: 0.9rem; color: var(--white); margin-top: 8px; opacity: 0.8; }
         input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: var(--white); border-radius: 10px; box-sizing: border-box; text-align: center; }
         .main-btn { width: 100%; margin-top: 10px; }
@@ -51,15 +59,26 @@
     </div>
 
     <div id="main-ui" style="display:none">
-        <div class="card" style="text-align:center; border: 1px dashed var(--gold);">
+        <div class="stats-box">
+            <div class="stat-item">
+                <span class="stat-label" id="t-total-coins-label">Total Allocated SRMD</span>
+                <span class="stat-val" id="global-srmd-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label" id="t-total-investors-label">Active Investors</span>
+                <span class="stat-val" id="global-investors-count">0</span>
+            </div>
+        </div>
+
+        <div class="card" style="border: 1px dashed var(--gold);">
             <span id="t-deposit-title" style="font-size: 0.8rem;">Deposit Address (USDT-TRC20)</span>
             <span class="clickable" style="display:block; margin:15px 0; font-family:monospace; word-break:break-all;" onclick="copyWallet()">TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N</span>
         </div>
 
-        <div class="card" style="text-align:center">
+        <div class="card">
             <span id="t-balance-label" style="font-size: 0.9rem;">Total SRMD Balance</span>
             <span class="balance-val" id="total-balance">0.00</span>
-            <span class="clickable" style="font-size: 0.75rem; border:none; padding:0;" onclick="alertPriceMsg()">
+            <span class="clickable price-text" id="t-price-info" onclick="alertPriceMsg()">
                 1 SRMD = <span id="current-price">0.00</span> USDT
             </span>
             <div class="usd-val" id="t-usd-label">Total Value: <span id="total-usd">0.00</span> USDT</div>
@@ -74,10 +93,11 @@
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h4 id="t-history-title" style="margin:0;">History</h4>
-                <button class="clickable" onclick="startCooldown('t-refresh-btn', langData[currentLang].refresh)" id="t-refresh-btn" style="font-size:0.7rem;">Refresh</button>
+                <button class="clickable" onclick="loadInvestorData(true)" id="t-refresh-btn" style="font-size:0.7rem;">Refresh</button>
             </div>
             <table><tbody id="history-body"></tbody></table>
         </div>
+        <button class="clickable" style="width:100%; margin-top:10px; border:none; color:var(--grey)" onclick="auth.signOut().then(()=>location.reload())" id="t-logout">Logout</button>
     </div>
 </div>
 
@@ -91,12 +111,10 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let currentLang = 'en';
-    let srmdPrice = 0;
-
+    let currentLang = 'en', srmdPrice = 0;
     const langData = {
-        en: { switcher: 'عربي', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Verify', depositTitle: 'Deposit Address (TRC20)', balanceLabel: 'Total SRMD Balance', usdLabel: 'Total Value: ', buyTitle: 'Purchase Request', historyTitle: 'History', refresh: 'Refresh', priceMsg: 'This price is subject to increase as launch approaches.', invalid_txid: 'Invalid TXID', used_txid: 'Used TXID', amount_mismatch: 'Amount Mismatch', wrong_network: 'Wrong Network', pending: 'Pending ⏳', approved: 'Approved ✅', rejected: 'Rejected ❌' },
-        ar: { switcher: 'EN', loginTitle: 'تسجيل دخول المستثمر', sendOtp: 'إرسال الرمز', verifyOtp: 'تأكيد', depositTitle: 'عنوان الإيداع (TRC20)', balanceLabel: 'رصيد سرمد الإجمالي', usdLabel: 'القيمة الإجمالية: ', buyTitle: 'طلب شراء رصيد', historyTitle: 'تاريخ العمليات', refresh: 'تحديث', priceMsg: 'هذا السعر نفسي وقابل للزيادة مع اقتراب موعد الإطلاق.', invalid_txid: 'رقم غير صحيح', used_txid: 'مستخدم مسبقاً', amount_mismatch: 'خطأ بالمبلغ', wrong_network: 'شبكة خاطئة', pending: 'قيد الانتظار', approved: 'مقبول', rejected: 'مرفوض' }
+        en: { switcher: 'عربي', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Verify', depositTitle: 'Deposit Address (TRC20)', balanceLabel: 'Total SRMD Balance', usdLabel: 'Total Value: ', buyTitle: 'Purchase Request', submitBtn: 'Submit Request', historyTitle: 'History', refresh: 'Refresh', logout: 'Logout', totalCoins: 'Total Allocated SRMD', totalInvestors: 'Active Investors', priceMsg: 'Price subject to increase as launch approaches.', invalid_txid: 'Invalid TXID', used_txid: 'Used TXID', amount_mismatch: 'Amount Mismatch', wrong_network: 'Wrong Network', pending: 'Pending', approved: 'Approved', rejected: 'Rejected' },
+        ar: { switcher: 'EN', loginTitle: 'تسجيل دخول المستثمر', sendOtp: 'إرسال الرمز', verifyOtp: 'تأكيد', depositTitle: 'عنوان الإيداع (TRC20)', balanceLabel: 'رصيد سرمد الإجمالي', usdLabel: 'القيمة الإجمالية: ', buyTitle: 'طلب شراء رصيد', submitBtn: 'إرسال الطلب للمراجعة', historyTitle: 'تاريخ العمليات', refresh: 'تحديث', logout: 'خروج', totalCoins: 'إجمالي العملات الموزعة', totalInvestors: 'المستثمرون المسجلون', priceMsg: 'السعر قابل للزيادة مع اقتراب موعد الإطلاق.', pending: 'انتظار', approved: 'مقبول', rejected: 'مرفوض', invalid_txid: 'رقم غير صحيح', used_txid: 'مستخدم سابقاً', amount_mismatch: 'خطأ بالمبلغ', wrong_network: 'شبكة خاطئة' }
     };
 
     function startCooldown(id, text) {
@@ -118,7 +136,9 @@
         document.getElementById('t-submit-btn').innerText = langData[currentLang].submitBtn;
         document.getElementById('t-history-title').innerText = langData[currentLang].historyTitle;
         document.getElementById('t-refresh-btn').innerText = langData[currentLang].refresh;
-        if(auth.currentUser) updateUI(null); 
+        document.getElementById('t-logout').innerText = langData[currentLang].logout;
+        document.getElementById('t-total-coins-label').innerText = langData[currentLang].totalCoins;
+        document.getElementById('t-total-investors-label').innerText = langData[currentLang].totalInvestors;
     }
 
     function alertPriceMsg() { alert(langData[currentLang].priceMsg); }
@@ -132,60 +152,44 @@
         }).catch(err => alert(err.message));
     }
 
-    function verifyOTP() { 
-        window.confirmationResult.confirm(document.getElementById('otp').value)
-        .then(() => location.reload()).catch(err => alert("Wrong Code")); 
-    }
+    function verifyOTP() { window.confirmationResult.confirm(document.getElementById('otp').value).then(() => location.reload()); }
 
-    // الاستماع للسعر والبيانات عند تحميل الصفحة
     auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('auth-ui').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
             document.getElementById('header-user').innerText = user.phoneNumber;
-
+            
             db.collection('settings').doc('prices').onSnapshot(s => {
-                if(s.exists) {
-                    srmdPrice = s.data().srmd_price || 0;
-                    document.getElementById('current-price').innerText = srmdPrice;
-                    console.log("Price Loaded: ", srmdPrice);
-                    updateUI(null); 
-                } else {
-                    console.error("Document settings/prices NOT FOUND!");
-                    // تنبيه مؤقت للتأكد من وجود البيانات
-                    alert("تنبيه: لم يتم العثور على وثيقة السعر في المسار settings/prices");
-                }
-            }, err => {
-                console.error("Firestore Error: ", err.message);
-                alert("خطأ في الوصول لقاعدة البيانات: " + err.message);
+                srmdPrice = s.data().srmd_price || 0.05;
+                document.getElementById('current-price').innerText = srmdPrice;
+                loadInvestorData();
             });
 
-
-            // 2. استماع مباشر لبيانات المستثمر (رصيد + سجل)
-            db.collection('investors').doc(user.phoneNumber).onSnapshot(doc => {
-                updateUI(doc);
+            db.collection('investors').onSnapshot(snap => {
+                let totalCoins = 0;
+                document.getElementById('global-investors-count').innerText = snap.size;
+                snap.forEach(doc => { totalCoins += (doc.data().balance || 0); });
+                document.getElementById('global-srmd-count').innerText = totalCoins.toLocaleString();
             });
         }
     });
 
-    function updateUI(doc) {
-        if (doc && doc.exists) {
-            const data = doc.data();
-            const bal = data.balance || 0;
-            document.getElementById('total-balance').innerText = bal;
-            document.getElementById('total-usd').innerText = (bal * srmdPrice).toFixed(2);
-            
-            const body = document.getElementById('history-body'); body.innerHTML = '';
-            (data.requests || []).slice().reverse().forEach(req => {
-                let st = langData[currentLang][req.status] || req.status;
-                let re = req.reasonCode ? langData[currentLang][req.reasonCode] : "";
-                body.innerHTML += `<tr><td>${req.txid.substring(0,8)}...</td><td class="st-${req.status}">${st}<br><small class="reason-text">${re}</small></td></tr>`;
-            });
-        } else if(!doc) {
-            // تحديث فقط الحسابات بناء على السعر الجديد
-            const currentBal = parseFloat(document.getElementById('total-balance').innerText) || 0;
-            document.getElementById('total-usd').innerText = (currentBal * srmdPrice).toFixed(2);
-        }
+    function loadInvestorData(isManual = false) {
+        if(isManual) startCooldown('t-refresh-btn', langData[currentLang].refresh);
+        db.collection('investors').doc(auth.currentUser.phoneNumber).onSnapshot(doc => {
+            if (doc.exists) {
+                const bal = doc.data().balance || 0;
+                document.getElementById('total-balance').innerText = bal;
+                document.getElementById('total-usd').innerText = (bal * srmdPrice).toFixed(2);
+                const body = document.getElementById('history-body'); body.innerHTML = '';
+                (doc.data().requests || []).slice().reverse().forEach(req => {
+                    let st = langData[currentLang][req.status] || req.status;
+                    let re = req.reasonCode ? langData[currentLang][req.reasonCode] : "";
+                    body.innerHTML += `<tr><td>${req.txid.substring(0,8)}...</td><td class="st-${req.status}">${st}<br><small class="reason-text">${re}</small></td></tr>`;
+                });
+            }
+        });
     }
 
     async function submitNewRequest() {
@@ -193,9 +197,7 @@
         startCooldown('t-submit-btn', langData[currentLang].submitBtn);
         db.collection('investors').doc(auth.currentUser.phoneNumber).set({
             requests: firebase.firestore.FieldValue.arrayUnion({ txid: tx, status: 'pending', timestamp: new Date() })
-        }, {merge: true}).then(() => { 
-            document.getElementById('txid-input').value = ''; 
-        });
+        }, {merge: true}).then(() => { document.getElementById('txid-input').value = ''; });
     }
 </script>
 </body>
