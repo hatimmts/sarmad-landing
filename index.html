@@ -99,7 +99,7 @@
 
         <div class="card">
             <h4 id="t-buy-title">Purchase Request</h4>
-            <input type="text" id="txid-input" placeholder="Enter 64-character TXID" maxlength="64" oninput="checkTxLength()">
+            <textarea id="txid-input" placeholder="Enter 64-character TXID" maxlength="64" oninput="checkTxLength()" rows="3" style="width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: var(--white); border-radius: 10px; box-sizing: border-box; text-align: center; resize: none; font-family: monospace; font-size: 0.9rem;"></textarea>
             <button class="clickable main-btn" onclick="submitNewRequest()" id="t-submit-btn">Submit Request</button>
         </div>
 
@@ -172,15 +172,14 @@
     function checkTxLength() {
     const txInput = document.getElementById('txid-input');
     const btn = document.getElementById('t-submit-btn');
-    // الزر يظل باهتاً حتى يصل النص لـ 64 حرفاً
-      if(txInput.value.trim().length === 64) {
+    if(txInput.value.trim().length === 64) {
+        btn.disabled = false;
         btn.style.opacity = "1";
-        btn.style.cursor = "pointer";
-      } else {
-        btn.style.opacity = "0.5";
-        btn.style.cursor = "not-allowed";
-      }
+    } else {
+        btn.disabled = true;
+        btn.style.opacity = "0.4";
     }
+}
     
     function verifyOTP() { window.confirmationResult.confirm(document.getElementById('otp').value).then(() => location.reload()); }
 
@@ -232,57 +231,29 @@
 
     async function submitNewRequest() {
     const tx = document.getElementById('txid-input').value.trim();
-    
-    // أولاً: التحقق من وجود نص
-    if(!tx) {
-        alert(currentLang === 'ar' ? "يرجى إدخال رمز TXID أولاً" : "Please enter TXID first");
-        return;
-    }
-
-    // ثانياً: التحقق من طول الرمز (64 حرف لشبكة TRC20)
-    if(tx.length !== 64) {
-        alert(currentLang === 'ar' ? "رمز TXID غير مكتمل (يجب أن يكون 64 حرفاً)" : "Invalid TXID length (must be 64 characters)");
-        return;
-    }
+    if(tx.length !== 64) return; // حماية إضافية
 
     startCooldown('t-submit-btn', langData[currentLang].submitBtn);
 
     try {
-        // ثالثاً: الفحص السريع في الكولكشن العام
         const txCheck = await db.collection('all_txids').doc(tx).get();
-        
         if (txCheck.exists) {
-            alert(currentLang === 'ar' ? "عذراً، هذا الرمز مستخدم مسبقاً!" : "Error: This TXID is already used!");
+            alert(currentLang === 'ar' ? "عذراً، هذا الرمز مستخدم مسبقاً!" : "Error: TXID already used!");
             return;
         }
 
-        // رابعاً: التخزين المزدوج (في الكولكشن العام + ملف المستثمر)
         const batch = db.batch();
-        
-        // إضافة للعام
-        const publicRef = db.collection('all_txids').doc(tx);
-        batch.set(publicRef, { used_by: auth.currentUser.phoneNumber, date: new Date() });
-
-        // إضافة لملف المستثمر
-        const investorRef = db.collection('investors').doc(auth.currentUser.phoneNumber);
-        batch.set(investorRef, {
-            requests: firebase.firestore.FieldValue.arrayUnion({ 
-                txid: tx, 
-                status: 'pending', 
-                timestamp: new Date() 
-            })
+        batch.set(db.collection('all_txids').doc(tx), { used_by: auth.currentUser.phoneNumber, date: new Date() });
+        batch.set(db.collection('investors').doc(auth.currentUser.phoneNumber), {
+            requests: firebase.firestore.FieldValue.arrayUnion({ txid: tx, status: 'pending', timestamp: new Date() })
         }, {merge: true});
 
         await batch.commit();
-
-        alert(currentLang === 'ar' ? "تم إرسال الطلب بنجاح" : "Request submitted successfully");
+        alert(currentLang === 'ar' ? "تم الإرسال بنجاح" : "Success");
         document.getElementById('txid-input').value = '';
+        checkTxLength(); // لإعادة تعطيل الزر بعد الإرسال
         loadInvestorData();
-
-    } catch (error) {
-        console.error("Error:", error);
-        alert(currentLang === 'ar' ? "خطأ في الاتصال" : "Connection Error");
-    }
+    } catch (e) { alert("Error!"); }
 }
 
 </script>
