@@ -12,6 +12,11 @@
         .logo { font-family: 'Orbitron', sans-serif; color: var(--gold); font-size: 1.2rem; }
         .user-id { font-size: 0.8rem; color: #aaa; border: 1px solid #333; padding: 4px 8px; border-radius: 20px; }
         .container { max-width: 500px; margin: auto; padding: 20px; }
+        
+        /* صندوق عنوان المحفظة الجديد */
+        .address-card { background: #1a1a1a; border: 1px dashed var(--gold); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
+        .wallet-address { color: var(--gold); font-family: monospace; display: block; margin: 10px 0; word-break: break-all; font-size: 0.9rem; cursor: pointer; background: #000; padding: 10px; border-radius: 8px; }
+        
         .balance-card { background: linear-gradient(145deg, #111, #1a1a1a); border: 1px solid var(--gold); padding: 30px; border-radius: 20px; text-align: center; margin-bottom: 25px; }
         .balance-val { font-size: 2.5rem; font-weight: bold; color: var(--gold); display: block; }
         .card { background: var(--card); border: 1px solid #222; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
@@ -22,7 +27,6 @@
         th, td { padding: 12px; border-bottom: 1px solid #222; text-align: center; }
         .st-pending { color: #ffa500; } .st-approved { color: #00ff88; } .st-rejected { color: #ff4444; }
         .reason-text { font-size: 0.7rem; color: #ff8888; display: block; margin-top: 5px; }
-        #auth-section { text-align: center; margin-top: 100px; }
     </style>
 </head>
 <body>
@@ -39,28 +43,35 @@
         <div id="recaptcha-container"></div>
         <button onclick="sendOTP()">إرسال رمز التحقق</button>
         <div id="otp-area" style="display:none">
-            <input type="text" id="otp" placeholder="أدخل الرمز المكون من 6 أرقام">
+            <input type="text" id="otp" placeholder="أدخل الرمز">
             <button onclick="verifyOTP()">تأكيد ودخول</button>
         </div>
     </div>
 
     <div id="main-ui" style="display:none">
+        
+        <div class="address-card">
+            <span style="font-size: 0.8rem; color: #aaa;">عنوان محفظة الإيداع (USDT-TRC20)</span>
+            <span class="wallet-address" id="my-wallet-link" onclick="copyWallet()">TXXXXXYourWalletAddressXXXXX</span>
+            <small style="color: #666;">إضغط على العنوان للنسخ</small>
+        </div>
+
         <div class="balance-card">
-            <span style="color:#aaa; font-size: 0.9rem;">رصيدك من عملة SRMD</span>
+            <span style="color:#aaa; font-size: 0.9rem;">رصيدك الإجمالي</span>
             <span class="balance-val" id="total-balance">0.00</span>
+            <small style="color: var(--gold)">SRMD</small>
         </div>
 
         <div class="card">
-            <h4>شراء رصيد جديد</h4>
-            <p style="font-size: 0.7rem; color: #aaa;">قم بتحويل المبلغ ثم أدخل رقم العملية (TXID) هنا:</p>
-            <input type="text" id="txid-input" placeholder="مثلاً: 0x123... أو رقم التحويل">
+            <h4>طلب شراء رصيد</h4>
+            <input type="text" id="txid-input" placeholder="أدخل رقم العملية (TXID)">
             <button onclick="submitNewRequest()">إرسال الطلب للمراجعة</button>
         </div>
 
         <div class="card">
-            <h4>سجل العمليات</h4>
+            <h4>تاريخ العمليات</h4>
             <table>
-                <thead><tr><th>رقم العملية</th><th>الحالة</th></tr></thead>
+                <thead><tr><th>العملية</th><th>الحالة</th></tr></thead>
                 <tbody id="history-body"></tbody>
             </table>
         </div>
@@ -72,6 +83,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
+    // ضع بيانات Firebase الخاصة بك هنا
     const firebaseConfig = {
         apiKey: "AIzaSyBVyEPs_xvz9Oryk-jpLev4ja7Sb1P6RaM",
         authDomain: "sarmad-web.firebaseapp.com",
@@ -84,6 +96,17 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // استبدل هذا بالعنوان الحقيقي لمحفظتك
+    const myWalletAddress = "TY9f6G4wS2sLz...ضع_عنوانك_هنا"; 
+    document.getElementById('my-wallet-link').innerText = myWalletAddress;
+
+    function copyWallet() {
+        navigator.clipboard.writeText(myWalletAddress).then(() => {
+            alert('تم نسخ عنوان المحفظة بنجاح!');
+        });
+    }
+
+    // --- وظائف الدخول وFirebase ---
     function sendOTP() {
         const p = document.getElementById('phone').value;
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size: 'invisible'});
@@ -119,7 +142,7 @@
                     let statusTxt = req.status === 'approved' ? 'مقبول ✅' : (req.status === 'rejected' ? 'مرفوض ❌' : 'قيد الانتظار ⏳');
                     let statusCls = 'st-' + req.status;
                     body.innerHTML += `<tr>
-                        <td>${req.txid.substring(0,10)}...</td>
+                        <td>${req.txid.substring(0,8)}...</td>
                         <td class="${statusCls}">${statusTxt} ${req.reason ? `<span class="reason-text">${req.reason}</span>` : ''}</td>
                     </tr>`;
                 });
