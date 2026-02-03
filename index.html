@@ -7,61 +7,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #050505; --card: #111; }
-        body { background: var(--bg); color: #fff; font-family: 'Tajawal', sans-serif; margin: 0; transition: 0.3s; }
-        header { background: #000; padding: 15px; border-bottom: 2px solid var(--gold); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-family: 'Orbitron', sans-serif; color: var(--gold); font-size: 1.1rem; }
-        .header-left { display: flex; align-items: center; gap: 10px; }
-        .user-id { font-size: 0.75rem; color: #aaa; border: 1px solid #333; padding: 4px 8px; border-radius: 20px; }
-        .lang-btn { background: #222; color: var(--gold); border: 1px solid var(--gold); padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+        body { background: var(--bg); color: #fff; font-family: 'Tajawal', sans-serif; margin: 0; }
+        
+        /* تنسيق الهيدر الجديد */
+        header { background: #000; padding: 20px 15px 10px 15px; border-bottom: 2px solid var(--gold); }
+        .logo-container { text-align: center; margin-bottom: 15px; }
+        .logo { font-family: 'Orbitron', sans-serif; color: var(--gold); font-size: 1.5rem; letter-spacing: 2px; }
+        
+        .sub-header { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto; }
+        .user-id { font-size: 0.75rem; color: #aaa; background: #111; border: 1px solid #333; padding: 5px 12px; border-radius: 20px; }
+        .lang-btn { background: #222; color: var(--gold); border: 1px solid var(--gold); padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: bold; min-width: 70px; }
         
         .container { max-width: 500px; margin: auto; padding: 20px; }
         .address-card { background: #1a1a1a; border: 1px dashed var(--gold); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
         .wallet-address { color: var(--gold); font-family: monospace; display: block; margin: 10px 0; word-break: break-all; font-size: 0.85rem; cursor: pointer; background: #000; padding: 12px; border-radius: 8px; border: 1px solid #222; }
         
-        .balance-card { background: linear-gradient(145deg, #111, #1a1a1a); border: 1px solid var(--gold); padding: 25px; border-radius: 20px; text-align: center; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .balance-card { background: linear-gradient(145deg, #111, #1a1a1a); border: 1px solid var(--gold); padding: 25px; border-radius: 20px; text-align: center; margin-bottom: 25px; }
         .balance-val { font-size: 2.5rem; font-weight: bold; color: var(--gold); display: block; margin: 5px 0; }
         .card { background: var(--card); border: 1px solid #222; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
         
-        input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; box-sizing: border-box; text-align: center; }
-        button.main-btn { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; box-sizing: border-box; text-align: center; font-size: 1rem; }
+        button.main-btn { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.8rem; }
         th, td { padding: 12px; border-bottom: 1px solid #222; text-align: center; }
         .st-pending { color: #ffa500; } .st-approved { color: #00ff88; } .st-rejected { color: #ff4444; }
-        .reason-text { font-size: 0.7rem; color: #ff8888; display: block; margin-top: 5px; font-style: italic; }
+        .reason-text { font-size: 0.7rem; color: #ff8888; display: block; margin-top: 5px; }
         
-        /* ضبط الاتجاه لـ LTR عند اختيار الإنجليزية */
         .en-mode { direction: ltr; font-family: sans-serif; }
-        .en-mode .logo { letter-spacing: 1px; }
     </style>
 </head>
-<body>
+<body id="body-tag">
 
 <header>
-    <div class="logo">SARMAD_PROTOCOL</div>
-    <div class="header-left">
+    <div class="logo-container">
+        <div class="logo">SARMAD PROTOCOL</div>
+    </div>
+    <div class="sub-header">
+        <div id="header-user" class="user-id">Guest / زائر</div>
         <button class="lang-btn" onclick="toggleLang()" id="lang-switcher">EN</button>
-        <div id="header-user" class="user-id">Guest</div>
     </div>
 </header>
 
 <div class="container">
     <div id="auth-ui" class="card">
-        <h3 id="t-login-title">تسجيل دخول المستثمر</h3>
+        <h3 id="t-login-title" style="text-align:center">تسجيل دخول المستثمر</h3>
         <input type="tel" id="phone" placeholder="+962xxxxxxxxx">
         <div id="recaptcha-container"></div>
         <button class="main-btn" onclick="sendOTP()" id="t-send-otp">إرسال رمز التحقق</button>
         <div id="otp-area" style="display:none">
-            <input type="text" id="otp" placeholder="أدخل الرمز">
+            <input type="text" id="otp" placeholder="OTP">
             <button class="main-btn" onclick="verifyOTP()" id="t-verify-otp">تأكيد ودخول</button>
         </div>
     </div>
 
     <div id="main-ui" style="display:none">
-        
         <div class="address-card">
             <span id="t-deposit-title" style="font-size: 0.8rem; color: #aaa;">عنوان محفظة الإيداع (USDT-TRC20)</span>
-            <span class="wallet-address" id="wallet-link" onclick="copyWallet()">TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N</span>
+            <span class="wallet-address" onclick="copyWallet()">TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N</span>
             <small id="t-copy-hint" style="color: #666;">إضغط على العنوان للنسخ</small>
         </div>
 
@@ -73,7 +76,7 @@
 
         <div class="card">
             <h4 id="t-buy-title">طلب شراء رصيد</h4>
-            <input type="text" id="txid-input" placeholder="رقم العملية TXID">
+            <input type="text" id="txid-input" placeholder="Txid">
             <button class="main-btn" onclick="submitNewRequest()" id="t-submit-btn">إرسال الطلب للمراجعة</button>
         </div>
 
@@ -105,9 +108,8 @@
     const db = firebase.firestore();
 
     const walletAddr = "TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N";
-
-    // --- الترجمة ---
     let currentLang = 'ar';
+
     const langData = {
         ar: {
             switcher: 'EN', loginTitle: 'تسجيل دخول المستثمر', sendOtp: 'إرسال رمز التحقق', verifyOtp: 'تأكيد ودخول',
@@ -116,7 +118,7 @@
             msgCopy: 'تم نسخ العنوان!', msgSent: 'تم إرسال طلبك بنجاح', pending: 'قيد الانتظار ⏳', approved: 'مقبول ✅', rejected: 'مرفوض ❌'
         },
         en: {
-            switcher: 'AR', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Confirm & Enter',
+            switcher: 'عربي', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Confirm & Enter',
             depositTitle: 'Deposit Wallet Address (USDT-TRC20)', copyHint: 'Tap to copy address', balanceLabel: 'Total Balance',
             buyTitle: 'Purchase Request', submitBtn: 'Submit Request', historyTitle: 'Transaction History', colTx: 'TXID', colSt: 'Status',
             msgCopy: 'Address Copied!', msgSent: 'Request submitted successfully', pending: 'Pending ⏳', approved: 'Approved ✅', rejected: 'Rejected ❌'
@@ -127,7 +129,8 @@
         currentLang = currentLang === 'ar' ? 'en' : 'ar';
         const html = document.getElementById('main-html');
         html.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-        if(currentLang === 'en') html.classList.add('en-mode'); else html.classList.remove('en-mode');
+        if(currentLang === 'en') document.getElementById('body-tag').classList.add('en-mode'); 
+        else document.getElementById('body-tag').classList.remove('en-mode');
         
         document.getElementById('lang-switcher').innerText = langData[currentLang].switcher;
         document.getElementById('t-login-title').innerText = langData[currentLang].loginTitle;
@@ -147,7 +150,6 @@
         navigator.clipboard.writeText(walletAddr).then(() => alert(langData[currentLang].msgCopy));
     }
 
-    // --- Firebase Logic ---
     function sendOTP() {
         const p = document.getElementById('phone').value;
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size: 'invisible'});
