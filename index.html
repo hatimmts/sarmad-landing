@@ -99,7 +99,7 @@
 
         <div class="card">
             <h4 id="t-buy-title">Purchase Request</h4>
-            <input type="text" id="txid-input" placeholder="Txid">
+            <input type="text" id="txid-input" placeholder="Enter 64-character TXID" maxlength="64" oninput="checkTxLength()">
             <button class="clickable main-btn" onclick="submitNewRequest()" id="t-submit-btn">Submit Request</button>
         </div>
 
@@ -169,6 +169,19 @@
         }).catch(err => alert(err.message));
     }
 
+    function checkTxLength() {
+    const txInput = document.getElementById('txid-input');
+    const btn = document.getElementById('t-submit-btn');
+    // الزر يظل باهتاً حتى يصل النص لـ 64 حرفاً
+      if(txInput.value.trim().length === 64) {
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+      } else {
+        btn.style.opacity = "0.5";
+        btn.style.cursor = "not-allowed";
+      }
+    }
+    
     function verifyOTP() { window.confirmationResult.confirm(document.getElementById('otp').value).then(() => location.reload()); }
 
     auth.onAuthStateChanged(user => {
@@ -218,35 +231,41 @@
     }
 
     async function submitNewRequest() {
-    const tx = document.getElementById('txid-input').value.trim(); 
-    if(!tx) return;
+    const tx = document.getElementById('txid-input').value.trim();
+    
+    // أولاً: التحقق من وجود نص
+    if(!tx) {
+        alert(currentLang === 'ar' ? "يرجى إدخال رمز TXID أولاً" : "Please enter TXID first");
+        return;
+    }
 
-    // 1. بدء العد التنازلي للزر
+    // ثانياً: التحقق من طول الرمز (64 حرف لشبكة TRC20)
+    if(tx.length !== 64) {
+        alert(currentLang === 'ar' ? "رمز TXID غير مكتمل (يجب أن يكون 64 حرفاً)" : "Invalid TXID length (must be 64 characters)");
+        return;
+    }
+
     startCooldown('t-submit-btn', langData[currentLang].submitBtn);
 
     try {
-        // 2. فحص شامل في قاعدة البيانات للتأكد أن الـ TXID لم يُستخدم أبداً
-        const q = await db.collectionGroup('investors')
-                          .where('requests', 'array-contains-any', [{txid: tx, status: 'approved'}, {txid: tx, status: 'pending'}])
-                          .get();
-
-        // ملاحظة: التحقق الدقيق من المصفوفات داخل Firestore يحتاج فحص يدوي أحياناً لضمان الدقة
-        let isDuplicate = false;
-        const allInvestors = await db.collection('investors').get();
-        allInvestors.forEach(doc => {
-            const reqs = doc.data().requests || [];
-            if (reqs.some(r => r.txid === tx)) {
-                isDuplicate = true;
-            }
-        });
-
-        if (isDuplicate) {
-            alert(currentLang === 'ar' ? "عذراً، رقم العملية هذا مستخدم مسبقاً!" : "Error: This TXID has already been submitted!");
+        // ثالثاً: الفحص السريع في الكولكشن العام
+        const txCheck = await db.collection('all_txids').doc(tx).get();
+        
+        if (txCheck.exists) {
+            alert(currentLang === 'ar' ? "عذراً، هذا الرمز مستخدم مسبقاً!" : "Error: This TXID is already used!");
             return;
         }
 
-        // 3. إذا لم يكن مكرراً، يتم إرسال الطلب
-        await db.collection('investors').doc(auth.currentUser.phoneNumber).set({
+        // رابعاً: التخزين المزدوج (في الكولكشن العام + ملف المستثمر)
+        const batch = db.batch();
+        
+        // إضافة للعام
+        const publicRef = db.collection('all_txids').doc(tx);
+        batch.set(publicRef, { used_by: auth.currentUser.phoneNumber, date: new Date() });
+
+        // إضافة لملف المستثمر
+        const investorRef = db.collection('investors').doc(auth.currentUser.phoneNumber);
+        batch.set(investorRef, {
             requests: firebase.firestore.FieldValue.arrayUnion({ 
                 txid: tx, 
                 status: 'pending', 
@@ -254,13 +273,15 @@
             })
         }, {merge: true});
 
-        alert(currentLang === 'ar' ? "تم إرسال الطلب بنجاح" : "Request sent successfully");
+        await batch.commit();
+
+        alert(currentLang === 'ar' ? "تم إرسال الطلب بنجاح" : "Request submitted successfully");
         document.getElementById('txid-input').value = '';
         loadInvestorData();
 
     } catch (error) {
-        console.error("Error checking TXID:", error);
-        alert("System error, please try again.");
+        console.error("Error:", error);
+        alert(currentLang === 'ar' ? "خطأ في الاتصال" : "Connection Error");
     }
 }
 
