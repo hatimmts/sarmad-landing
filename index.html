@@ -15,10 +15,10 @@
         .sub-header { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto; }
         .user-id { font-size: 0.75rem; color: var(--white); border: 1px solid #333; padding: 5px 12px; border-radius: 20px; }
         .clickable { color: var(--gold); border: 1px solid var(--gold); background: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .clickable:disabled { color: var(--grey); border-color: var(--grey); cursor: not-allowed; }
+        .clickable:disabled { color: var(--grey); border-color: var(--grey); cursor: not-allowed; opacity: 0.6; }
         .container { max-width: 500px; margin: auto; padding: 20px; }
         .card { background: #0a0a0a; border: 1px solid #222; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .balance-val { font-size: 2.5rem; font-weight: bold; color: var(--white); display: block; margin-top: 5px; }
+        .balance-val { font-size: 2.5rem; font-weight: bold; color: var(--white); display: block; margin: 5px 0; }
         .usd-val { font-size: 0.9rem; color: var(--white); margin-top: 8px; opacity: 0.8; }
         input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: var(--white); border-radius: 10px; box-sizing: border-box; text-align: center; }
         .main-btn { width: 100%; margin-top: 10px; }
@@ -74,7 +74,7 @@
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h4 id="t-history-title" style="margin:0;">History</h4>
-                <button class="clickable" onclick="loadInvestorData(true)" id="t-refresh-btn" style="font-size:0.7rem;">Refresh</button>
+                <button class="clickable" onclick="startCooldown('t-refresh-btn', langData[currentLang].refresh)" id="t-refresh-btn" style="font-size:0.7rem;">Refresh</button>
             </div>
             <table><tbody id="history-body"></tbody></table>
         </div>
@@ -91,7 +91,9 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let currentLang = 'en', srmdPrice = 0;
+    let currentLang = 'en';
+    let srmdPrice = 0;
+
     const langData = {
         en: { switcher: 'عربي', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Verify', depositTitle: 'Deposit Address (TRC20)', balanceLabel: 'Total SRMD Balance', usdLabel: 'Total Value: ', buyTitle: 'Purchase Request', historyTitle: 'History', refresh: 'Refresh', priceMsg: 'This price is subject to increase as launch approaches.', invalid_txid: 'Invalid TXID', used_txid: 'Used TXID', amount_mismatch: 'Amount Mismatch', wrong_network: 'Wrong Network', pending: 'Pending ⏳', approved: 'Approved ✅', rejected: 'Rejected ❌' },
         ar: { switcher: 'EN', loginTitle: 'تسجيل دخول المستثمر', sendOtp: 'إرسال الرمز', verifyOtp: 'تأكيد', depositTitle: 'عنوان الإيداع (TRC20)', balanceLabel: 'رصيد سرمد الإجمالي', usdLabel: 'القيمة الإجمالية: ', buyTitle: 'طلب شراء رصيد', historyTitle: 'تاريخ العمليات', refresh: 'تحديث', priceMsg: 'هذا السعر نفسي وقابل للزيادة مع اقتراب موعد الإطلاق.', invalid_txid: 'رقم غير صحيح', used_txid: 'مستخدم مسبقاً', amount_mismatch: 'خطأ بالمبلغ', wrong_network: 'شبكة خاطئة', pending: 'قيد الانتظار', approved: 'مقبول', rejected: 'مرفوض' }
@@ -116,7 +118,7 @@
         document.getElementById('t-submit-btn').innerText = langData[currentLang].submitBtn;
         document.getElementById('t-history-title').innerText = langData[currentLang].historyTitle;
         document.getElementById('t-refresh-btn').innerText = langData[currentLang].refresh;
-        loadInvestorData();
+        if(auth.currentUser) updateUI(null); 
     }
 
     function alertPriceMsg() { alert(langData[currentLang].priceMsg); }
@@ -127,39 +129,55 @@
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size: 'invisible'});
         auth.signInWithPhoneNumber(p, window.recaptchaVerifier).then(res => {
             window.confirmationResult = res; document.getElementById('otp-area').style.display = 'block';
-        });
+        }).catch(err => alert(err.message));
     }
 
-    function verifyOTP() { window.confirmationResult.confirm(document.getElementById('otp').value).then(() => location.reload()); }
+    function verifyOTP() { 
+        window.confirmationResult.confirm(document.getElementById('otp').value)
+        .then(() => location.reload()).catch(err => alert("Wrong Code")); 
+    }
 
+    // الاستماع للسعر والبيانات عند تحميل الصفحة
     auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('auth-ui').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
             document.getElementById('header-user').innerText = user.phoneNumber;
+
+            // 1. استماع مباشر للسعر
             db.collection('settings').doc('prices').onSnapshot(s => {
-                srmdPrice = s.data().srmd_price || 0.05;
-                document.getElementById('current-price').innerText = srmdPrice;
-                loadInvestorData();
+                if(s.exists) {
+                    srmdPrice = s.data().srmd_price || 0.05;
+                    document.getElementById('current-price').innerText = srmdPrice;
+                    updateUI(null); // تحديث القيمة الإجمالية
+                }
+            });
+
+            // 2. استماع مباشر لبيانات المستثمر (رصيد + سجل)
+            db.collection('investors').doc(user.phoneNumber).onSnapshot(doc => {
+                updateUI(doc);
             });
         }
     });
 
-    function loadInvestorData(isManual = false) {
-        if(isManual) startCooldown('t-refresh-btn', langData[currentLang].refresh);
-        db.collection('investors').doc(auth.currentUser.phoneNumber).get().then(doc => {
-            if (doc.exists) {
-                const bal = doc.data().balance || 0;
-                document.getElementById('total-balance').innerText = bal;
-                document.getElementById('total-usd').innerText = (bal * srmdPrice).toFixed(2);
-                const body = document.getElementById('history-body'); body.innerHTML = '';
-                (doc.data().requests || []).slice().reverse().forEach(req => {
-                    let st = langData[currentLang][req.status] || req.status;
-                    let re = req.reasonCode ? langData[currentLang][req.reasonCode] : "";
-                    body.innerHTML += `<tr><td>${req.txid.substring(0,8)}...</td><td class="st-${req.status}">${st}<br><small class="reason-text">${re}</small></td></tr>`;
-                });
-            }
-        });
+    function updateUI(doc) {
+        if (doc && doc.exists) {
+            const data = doc.data();
+            const bal = data.balance || 0;
+            document.getElementById('total-balance').innerText = bal;
+            document.getElementById('total-usd').innerText = (bal * srmdPrice).toFixed(2);
+            
+            const body = document.getElementById('history-body'); body.innerHTML = '';
+            (data.requests || []).slice().reverse().forEach(req => {
+                let st = langData[currentLang][req.status] || req.status;
+                let re = req.reasonCode ? langData[currentLang][req.reasonCode] : "";
+                body.innerHTML += `<tr><td>${req.txid.substring(0,8)}...</td><td class="st-${req.status}">${st}<br><small class="reason-text">${re}</small></td></tr>`;
+            });
+        } else if(!doc) {
+            // تحديث فقط الحسابات بناء على السعر الجديد
+            const currentBal = parseFloat(document.getElementById('total-balance').innerText) || 0;
+            document.getElementById('total-usd').innerText = (currentBal * srmdPrice).toFixed(2);
+        }
     }
 
     async function submitNewRequest() {
@@ -167,7 +185,9 @@
         startCooldown('t-submit-btn', langData[currentLang].submitBtn);
         db.collection('investors').doc(auth.currentUser.phoneNumber).set({
             requests: firebase.firestore.FieldValue.arrayUnion({ txid: tx, status: 'pending', timestamp: new Date() })
-        }, {merge: true}).then(() => { document.getElementById('txid-input').value = ''; loadInvestorData(); });
+        }, {merge: true}).then(() => { 
+            document.getElementById('txid-input').value = ''; 
+        });
     }
 </script>
 </body>
