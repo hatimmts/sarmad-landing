@@ -577,8 +577,8 @@
                     requests: firebase.firestore.FieldValue.arrayUnion({ 
                         txid: tx, 
                         status: 'pending', 
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    })
+                        timestamp: new Date()
+                        })
                 }, 
                 { merge: true }
             );
