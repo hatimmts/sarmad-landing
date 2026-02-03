@@ -218,12 +218,52 @@
     }
 
     async function submitNewRequest() {
-        const tx = document.getElementById('txid-input').value; if(!tx) return;
-        startCooldown('t-submit-btn', langData[currentLang].submitBtn);
-        db.collection('investors').doc(auth.currentUser.phoneNumber).set({
-            requests: firebase.firestore.FieldValue.arrayUnion({ txid: tx, status: 'pending', timestamp: new Date() })
-        }, {merge: true}).then(() => { document.getElementById('txid-input').value = ''; loadInvestorData(); });
+    const tx = document.getElementById('txid-input').value.trim(); 
+    if(!tx) return;
+
+    // 1. بدء العد التنازلي للزر
+    startCooldown('t-submit-btn', langData[currentLang].submitBtn);
+
+    try {
+        // 2. فحص شامل في قاعدة البيانات للتأكد أن الـ TXID لم يُستخدم أبداً
+        const q = await db.collectionGroup('investors')
+                          .where('requests', 'array-contains-any', [{txid: tx, status: 'approved'}, {txid: tx, status: 'pending'}])
+                          .get();
+
+        // ملاحظة: التحقق الدقيق من المصفوفات داخل Firestore يحتاج فحص يدوي أحياناً لضمان الدقة
+        let isDuplicate = false;
+        const allInvestors = await db.collection('investors').get();
+        allInvestors.forEach(doc => {
+            const reqs = doc.data().requests || [];
+            if (reqs.some(r => r.txid === tx)) {
+                isDuplicate = true;
+            }
+        });
+
+        if (isDuplicate) {
+            alert(currentLang === 'ar' ? "عذراً، رقم العملية هذا مستخدم مسبقاً!" : "Error: This TXID has already been submitted!");
+            return;
+        }
+
+        // 3. إذا لم يكن مكرراً، يتم إرسال الطلب
+        await db.collection('investors').doc(auth.currentUser.phoneNumber).set({
+            requests: firebase.firestore.FieldValue.arrayUnion({ 
+                txid: tx, 
+                status: 'pending', 
+                timestamp: new Date() 
+            })
+        }, {merge: true});
+
+        alert(currentLang === 'ar' ? "تم إرسال الطلب بنجاح" : "Request sent successfully");
+        document.getElementById('txid-input').value = '';
+        loadInvestorData();
+
+    } catch (error) {
+        console.error("Error checking TXID:", error);
+        alert("System error, please try again.");
     }
+}
+
 </script>
 </body>
 </html>
