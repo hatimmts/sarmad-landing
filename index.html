@@ -1,78 +1,79 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="main-html">
+<html lang="en" dir="ltr" id="main-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sarmad Protocol | Investment Wallet</title>
+    <title>Sarmad Protocol</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #000; --white: #ffffff; --grey: #888; }
-        body { background: var(--bg); color: var(--white); font-family: 'Tajawal', sans-serif; margin: 0; }
-        header { background: #000; padding: 20px 15px 10px 15px; border-bottom: 2px solid var(--gold); }
+        :root { --gold: #d4af37; --bg: #000; --white: #ffffff; --grey: #555; }
+        body { background: var(--bg); color: var(--white); font-family: sans-serif; margin: 0; }
+        .en-mode { font-family: sans-serif; }
+        .ar-mode { font-family: 'Tajawal', sans-serif; }
+        header { background: #000; padding: 20px 15px; border-bottom: 2px solid var(--gold); }
         .logo-container { text-align: center; margin-bottom: 15px; }
         .logo { font-family: 'Orbitron', sans-serif; color: var(--white); font-size: 1.5rem; letter-spacing: 2px; }
         .sub-header { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 0 auto; }
-        .user-id { font-size: 0.75rem; color: var(--white); border: 1px solid #333; padding: 5px 12px; border-radius: 20px; }
-        .clickable { color: var(--gold) !important; cursor: pointer; border: 1px solid var(--gold); background: none; padding: 6px 12px; border-radius: 8px; transition: 0.2s; font-weight: bold; }
-        .clickable:active { color: var(--grey) !important; border-color: var(--grey) !important; transform: scale(0.95); }
+        .user-id { font-size: 0.75rem; color: var(--white); border: 1px solid var(--grey); padding: 5px 12px; border-radius: 20px; }
+        .clickable { color: var(--gold); border: 1px solid var(--gold); background: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; text-decoration: none; }
+        .clickable:disabled { color: var(--grey); border-color: var(--grey); cursor: not-allowed; transform: none !important; }
         .container { max-width: 500px; margin: auto; padding: 20px; }
         .card { background: #0a0a0a; border: 1px solid #222; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
         .balance-val { font-size: 2.5rem; font-weight: bold; color: var(--white); display: block; }
-        input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: var(--white); border-radius: 10px; box-sizing: border-box; text-align: center; font-size: 1rem; }
-        .main-btn { width: 100%; padding: 15px; font-weight: bold; font-size: 1rem; margin-top: 10px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: var(--white); border-radius: 10px; box-sizing: border-box; text-align: center; }
+        .main-btn { width: 100%; margin-top: 10px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 15px; }
-        th { color: var(--white); border-bottom: 1px solid #333; padding: 10px; }
         td { padding: 12px; border-bottom: 1px solid #222; text-align: center; }
         .st-pending { color: #ffa500; } .st-approved { color: #00ff88; } .st-rejected { color: #ff4444; }
-        .reason-text { font-size: 0.7rem; color: #ff8888; display: block; margin-top: 5px; }
-        .en-mode { direction: ltr; font-family: sans-serif; }
     </style>
 </head>
-<body id="body-tag">
+<body id="body-tag" class="en-mode">
 
 <header>
     <div class="logo-container"><div class="logo">SARMAD PROTOCOL</div></div>
     <div class="sub-header">
-        <div id="header-user" class="user-id">Guest / زائر</div>
-        <button class="clickable" onclick="toggleLang()" id="lang-switcher">EN</button>
+        <div id="header-user" class="user-id">Guest</div>
+        <button class="clickable" onclick="toggleLang()" id="lang-switcher">عربي</button>
     </div>
 </header>
 
 <div class="container">
     <div id="auth-ui" class="card">
-        <h3 id="t-login-title" style="text-align:center">تسجيل دخول المستثمر</h3>
+        <h3 id="t-login-title" style="text-align:center">Investor Login</h3>
         <input type="tel" id="phone" placeholder="+962xxxxxxxxx">
         <div id="recaptcha-container"></div>
-        <button class="main-btn clickable" onclick="sendOTP()" id="t-send-otp">إرسال رمز التحقق</button>
+        <button class="clickable main-btn" onclick="sendOTP()" id="t-send-otp">Send Code</button>
         <div id="otp-area" style="display:none">
             <input type="text" id="otp" placeholder="OTP">
-            <button class="main-btn clickable" onclick="verifyOTP()" id="t-verify-otp">تأكيد ودخول</button>
+            <button class="clickable main-btn" onclick="verifyOTP()" id="t-verify-otp">Verify</button>
         </div>
     </div>
 
     <div id="main-ui" style="display:none">
         <div class="card" style="text-align:center; border: 1px dashed var(--gold);">
-            <span id="t-deposit-title" style="font-size: 0.8rem;">عنوان محفظة الإيداع (USDT-TRC20)</span>
-            <span class="clickable" style="display:block; margin:15px 0; font-family:monospace; font-size:0.85rem; word-break:break-all;" onclick="copyWallet()">TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N</span>
-            <small id="t-copy-hint" style="color:var(--grey)">إضغط على العنوان للنسخ</small>
+            <span id="t-deposit-title" style="font-size: 0.8rem;">Deposit Address (USDT-TRC20)</span>
+            <span class="clickable" style="display:block; margin:15px 0; font-family:monospace; word-break:break-all;" onclick="copyWallet()">TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N</span>
         </div>
 
         <div class="card" style="text-align:center">
-            <span id="t-balance-label" style="font-size: 0.9rem;">رصيدك الإجمالي</span>
+            <span id="t-balance-label" style="font-size: 0.9rem;">Total Balance</span>
             <span class="balance-val" id="total-balance">0.00</span>
             <small style="color: var(--gold)">SRMD</small>
         </div>
 
         <div class="card">
-            <h4 id="t-buy-title">طلب شراء رصيد</h4>
+            <h4 id="t-buy-title">Purchase Request</h4>
             <input type="text" id="txid-input" placeholder="Txid">
-            <button class="main-btn clickable" onclick="submitNewRequest()" id="t-submit-btn">إرسال الطلب للمراجعة</button>
+            <button class="clickable main-btn" onclick="submitNewRequest()" id="t-submit-btn">Submit Request</button>
         </div>
 
         <div class="card">
-            <h4 id="t-history-title">تاريخ العمليات</h4>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h4 id="t-history-title" style="margin:0;">History</h4>
+                <button class="clickable" onclick="loadInvestorData(true)" id="t-refresh-btn" style="font-size:0.7rem;">Refresh</button>
+            </div>
             <table>
-                <thead><tr><th id="t-col-tx">العملية</th><th id="t-col-st">الحالة</th></tr></thead>
+                <thead><tr><th id="t-col-tx">TXID</th><th id="t-col-st">Status</th></tr></thead>
                 <tbody id="history-body"></tbody>
             </table>
         </div>
@@ -89,33 +90,46 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let currentLang = 'ar';
+    let currentLang = 'en';
     const langData = {
-        ar: { switcher: 'EN', loginTitle: 'تسجيل دخول المستثمر', sendOtp: 'إرسال رمز التحقق', verifyOtp: 'تأكيد ودخول', depositTitle: 'عنوان محفظة الإيداع (USDT-TRC20)', copyHint: 'إضغط على العنوان للنسخ', balanceLabel: 'رصيدك الإجمالي', buyTitle: 'طلب شراء رصيد', submitBtn: 'إرسال الطلب للمراجعة', historyTitle: 'تاريخ العمليات', colTx: 'العملية', colSt: 'الحالة', msgCopy: 'تم نسخ العنوان!', msgSent: 'تم إرسال الطلب بنجاح', pending: 'قيد الانتظار ⏳', approved: 'مقبول ✅', rejected: 'مرفوض ❌', invalid_txid: 'رقم العملية غير صحيح', used_txid: 'رقم العملية مستخدم مسبقاً', amount_mismatch: 'المبلغ غير مطابق للتحويل', wrong_network: 'التحويل عبر شبكة خاطئة' },
-        en: { switcher: 'عربي', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Confirm & Enter', depositTitle: 'Deposit Wallet (TRC20)', copyHint: 'Tap to copy address', balanceLabel: 'Total Balance', buyTitle: 'Purchase Request', submitBtn: 'Submit Request', historyTitle: 'History', colTx: 'TXID', colSt: 'Status', msgCopy: 'Address Copied!', msgSent: 'Request submitted', pending: 'Pending ⏳', approved: 'Approved ✅', rejected: 'Rejected ❌', invalid_txid: 'Invalid TXID', used_txid: 'TXID already used', amount_mismatch: 'Amount Mismatch', wrong_network: 'Wrong Network' }
+        en: { switcher: 'عربي', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Verify', depositTitle: 'Deposit Address (TRC20)', balanceLabel: 'Total Balance', buyTitle: 'Purchase Request', submitBtn: 'Submit Request', historyTitle: 'History', colTx: 'TXID', colSt: 'Status', refresh: 'Refresh', pending: 'Pending ⏳', approved: 'Approved ✅', rejected: 'Rejected ❌', invalid_txid: 'Invalid TXID', used_txid: 'Used TXID', amount_mismatch: 'Amount Mismatch', wrong_network: 'Wrong Network' },
+        ar: { switcher: 'EN', loginTitle: 'تسجيل دخول المستثمر', sendOtp: 'إرسال الرمز', verifyOtp: 'تأكيد', depositTitle: 'عنوان الإيداع (TRC20)', balanceLabel: 'رصيدك الإجمالي', buyTitle: 'طلب شراء رصيد', submitBtn: 'إرسال الطلب', historyTitle: 'تاريخ العمليات', colTx: 'العملية', colSt: 'الحالة', refresh: 'تحديث', pending: 'قيد الانتظار', approved: 'مقبول', rejected: 'مرفوض', invalid_txid: 'رقم غير صحيح', used_txid: 'مستخدم سابقاً', amount_mismatch: 'خطأ بالمبلغ', wrong_network: 'شبكة خاطئة' }
     };
 
+    function startCooldown(btnId, originalText) {
+        const btn = document.getElementById(btnId);
+        btn.disabled = true;
+        let count = 10;
+        const timer = setInterval(() => {
+            btn.innerText = count + "s";
+            count--;
+            if (count < 0) {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        }, 1000);
+    }
+
     function toggleLang() {
-        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        currentLang = currentLang === 'en' ? 'ar' : 'en';
         const html = document.getElementById('main-html');
         html.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-        if(currentLang === 'en') document.getElementById('body-tag').classList.add('en-mode'); else document.getElementById('body-tag').classList.remove('en-mode');
-        
+        document.getElementById('body-tag').className = currentLang + "-mode";
         document.getElementById('lang-switcher').innerText = langData[currentLang].switcher;
         document.getElementById('t-login-title').innerText = langData[currentLang].loginTitle;
         document.getElementById('t-send-otp').innerText = langData[currentLang].sendOtp;
-        document.getElementById('t-verify-otp').innerText = langData[currentLang].verifyOtp;
         document.getElementById('t-deposit-title').innerText = langData[currentLang].depositTitle;
-        document.getElementById('t-copy-hint').innerText = langData[currentLang].copyHint;
         document.getElementById('t-balance-label').innerText = langData[currentLang].balanceLabel;
         document.getElementById('t-buy-title').innerText = langData[currentLang].buyTitle;
         document.getElementById('t-submit-btn').innerText = langData[currentLang].submitBtn;
         document.getElementById('t-history-title').innerText = langData[currentLang].historyTitle;
         document.getElementById('t-col-tx').innerText = langData[currentLang].colTx;
         document.getElementById('t-col-st').innerText = langData[currentLang].colSt;
+        document.getElementById('t-refresh-btn').innerText = langData[currentLang].refresh;
     }
 
-    function copyWallet() { navigator.clipboard.writeText("TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N").then(() => alert(langData[currentLang].msgCopy)); }
+    function copyWallet() { navigator.clipboard.writeText("TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N").then(() => alert("Copied!")); }
 
     function sendOTP() {
         const p = document.getElementById('phone').value;
@@ -123,7 +137,7 @@
         auth.signInWithPhoneNumber(p, window.recaptchaVerifier).then(res => {
             window.confirmationResult = res;
             document.getElementById('otp-area').style.display = 'block';
-        }).catch(e => alert(e.message));
+        });
     }
 
     function verifyOTP() {
@@ -136,31 +150,36 @@
             document.getElementById('auth-ui').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
             document.getElementById('header-user').innerText = user.phoneNumber;
-            db.collection('investors').doc(user.phoneNumber).onSnapshot(doc => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('total-balance').innerText = data.balance || 0;
-                    const body = document.getElementById('history-body');
-                    body.innerHTML = '';
-                    (data.requests || []).slice().reverse().forEach(req => {
-                        let stTxt = langData[currentLang][req.status] || req.status;
-                        let reTxt = req.reasonCode ? langData[currentLang][req.reasonCode] : "";
-                        body.innerHTML += `<tr><td>${req.txid.substring(0,8)}...</td><td class="st-${req.status}">${stTxt} ${reTxt ? `<span class="reason-text">${reTxt}</span>` : ''}</td></tr>`;
-                    });
-                }
-            });
+            loadInvestorData();
         }
     });
+
+    function loadInvestorData(isManual = false) {
+        if(isManual) startCooldown('t-refresh-btn', langData[currentLang].refresh);
+        const phone = auth.currentUser.phoneNumber;
+        db.collection('investors').doc(phone).get().then(doc => {
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('total-balance').innerText = data.balance || 0;
+                const body = document.getElementById('history-body');
+                body.innerHTML = '';
+                (data.requests || []).slice().reverse().forEach(req => {
+                    let st = langData[currentLang][req.status] || req.status;
+                    let re = req.reasonCode ? langData[currentLang][req.reasonCode] : "";
+                    body.innerHTML += `<tr><td>${req.txid.substring(0,8)}...</td><td class="st-${req.status}">${st} <br><small>${re}</small></td></tr>`;
+                });
+            }
+        });
+    }
 
     async function submitNewRequest() {
         const tx = document.getElementById('txid-input').value;
         if(!tx) return;
+        startCooldown('t-submit-btn', langData[currentLang].submitBtn);
         const phone = auth.currentUser.phoneNumber;
-        const doc = await db.collection('investors').doc(phone).get();
-        if((doc.data().requests || []).find(r => r.txid === tx)) return alert(currentLang==='ar'?'الرمز مرسل مسبقاً':'TXID already sent');
         db.collection('investors').doc(phone).set({
             requests: firebase.firestore.FieldValue.arrayUnion({ txid: tx, status: 'pending', timestamp: new Date() })
-        }, {merge: true}).then(() => { alert(langData[currentLang].msgSent); document.getElementById('txid-input').value = ''; });
+        }, {merge: true}).then(() => { alert("Sent!"); document.getElementById('txid-input').value = ''; loadInvestorData(); });
     }
 </script>
 </body>
