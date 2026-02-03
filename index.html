@@ -6,16 +6,22 @@
     <title>Sarmad Protocol | Investor Wallet</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #000; --white: #ffffff; --grey: #888; }
-        body { background: var(--bg); color: var(--white); font-family: sans-serif; margin: 0; }
+        :root { --gold: #d4af37; --bg: #000; --white: #ffffff; --grey: #888; --active-grey: #444; }
+        body { background: var(--bg); color: var(--white); font-family: sans-serif; margin: 0; overflow-x: hidden; }
         .ar-mode { font-family: 'Tajawal', sans-serif; }
+        
+        /* الترويسة المحدثة */
         header { background: #000; padding: 20px 15px 10px 15px; border-bottom: 2px solid var(--gold); }
         .logo-container { text-align: center; margin-bottom: 15px; }
         .logo { font-family: 'Orbitron', sans-serif; color: var(--white); font-size: 1.5rem; letter-spacing: 2px; }
         .sub-header { display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin: 10px auto; }
         .user-id { font-size: 0.75rem; color: var(--white); border: 1px solid #333; padding: 5px 12px; border-radius: 20px; }
-        .clickable { color: var(--gold); border: 1px solid var(--gold); background: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .clickable:disabled { color: var(--grey); border-color: var(--grey); cursor: not-allowed; opacity: 0.6; }
+        
+        /* نظام الألوان: ذهبي للضغط، أبيض للمعلومات */
+        .clickable { color: var(--gold); border: 1px solid var(--gold); background: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; text-decoration: none; }
+        .clickable:disabled { color: var(--active-grey); border-color: var(--active-grey); cursor: not-allowed; }
+        .clickable:active { transform: scale(0.95); color: var(--active-grey); border-color: var(--active-grey); }
+
         .container { max-width: 500px; margin: auto; padding: 20px; }
         .card { background: #0a0a0a; border: 1px solid #222; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; }
         
@@ -26,10 +32,14 @@
         .stat-val { font-size: 1.2rem; font-weight: bold; color: var(--gold); font-family: 'Orbitron', sans-serif; }
 
         .balance-val { font-size: 2.5rem; font-weight: bold; color: var(--white); display: block; margin: 10px 0; }
-        .price-text { direction: ltr !important; unicode-bidi: bidi-override; display: inline-block; font-size: 0.85rem; border: none !important; padding: 0 !important; }
+        
+        /* إصلاح اتجاه معادلة السعر */
+        .price-text { direction: ltr !important; unicode-bidi: bidi-override; display: inline-block; font-size: 0.85rem; border: none !important; padding: 0 !important; cursor: pointer; }
+        
         .usd-val { font-size: 0.9rem; color: var(--white); margin-top: 8px; opacity: 0.8; }
         input { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #333; color: var(--white); border-radius: 10px; box-sizing: border-box; text-align: center; }
         .main-btn { width: 100%; margin-top: 10px; }
+        
         table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 15px; }
         td { padding: 12px; border-bottom: 1px solid #222; text-align: center; }
         .st-pending { color: #ffa500; } .st-approved { color: #00ff88; } .st-rejected { color: #ff4444; }
@@ -41,14 +51,14 @@
 <header>
     <div class="logo-container"><div class="logo">SARMAD PROTOCOL</div></div>
     <div class="sub-header">
-        <div id="header-user" class="user-id">Guest</div>
+        <div id="header-user" class="user-id">Guest / زائر</div>
         <button class="clickable" onclick="toggleLang()" id="lang-switcher">عربي</button>
     </div>
 </header>
 
 <div class="container">
     <div id="auth-ui" class="card">
-        <h3 id="t-login-title" style="text-align:center">Investor Login</h3>
+        <h3 id="t-login-title">Investor Login</h3>
         <input type="tel" id="phone" placeholder="+962xxxxxxxxx">
         <div id="recaptcha-container"></div>
         <button class="clickable main-btn" onclick="sendOTP()" id="t-send-otp">Send Code</button>
@@ -73,6 +83,7 @@
         <div class="card" style="border: 1px dashed var(--gold);">
             <span id="t-deposit-title" style="font-size: 0.8rem;">Deposit Address (USDT-TRC20)</span>
             <span class="clickable" style="display:block; margin:15px 0; font-family:monospace; word-break:break-all;" onclick="copyWallet()">TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N</span>
+            <small id="t-copy-hint" style="color:var(--grey)">Tap address to copy</small>
         </div>
 
         <div class="card">
@@ -81,7 +92,9 @@
             <span class="clickable price-text" id="t-price-info" onclick="alertPriceMsg()">
                 1 SRMD = <span id="current-price">0.00</span> USDT
             </span>
-            <div class="usd-val" id="t-usd-label">Total Value: <span id="total-usd">0.00</span> USDT</div>
+            <div class="usd-val">
+                <span id="t-usd-label">Total Value:</span> <span id="total-usd">0.00</span> USDT
+            </div>
         </div>
 
         <div class="card">
@@ -97,6 +110,7 @@
             </div>
             <table><tbody id="history-body"></tbody></table>
         </div>
+
         <button class="clickable" style="width:100%; margin-top:10px; border:none; color:var(--grey)" onclick="auth.signOut().then(()=>location.reload())" id="t-logout">Logout</button>
     </div>
 </div>
@@ -113,8 +127,8 @@
 
     let currentLang = 'en', srmdPrice = 0;
     const langData = {
-        en: { switcher: 'عربي', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Verify', depositTitle: 'Deposit Address (TRC20)', balanceLabel: 'Total SRMD Balance', usdLabel: 'Total Value: ', buyTitle: 'Purchase Request', submitBtn: 'Submit Request', historyTitle: 'History', refresh: 'Refresh', logout: 'Logout', totalCoins: 'Total Allocated SRMD', totalInvestors: 'Active Investors', priceMsg: 'Price subject to increase as launch approaches.', invalid_txid: 'Invalid TXID', used_txid: 'Used TXID', amount_mismatch: 'Amount Mismatch', wrong_network: 'Wrong Network', pending: 'Pending', approved: 'Approved', rejected: 'Rejected' },
-        ar: { switcher: 'EN', loginTitle: 'تسجيل دخول المستثمر', sendOtp: 'إرسال الرمز', verifyOtp: 'تأكيد', depositTitle: 'عنوان الإيداع (TRC20)', balanceLabel: 'رصيد سرمد الإجمالي', usdLabel: 'القيمة الإجمالية: ', buyTitle: 'طلب شراء رصيد', submitBtn: 'إرسال الطلب للمراجعة', historyTitle: 'تاريخ العمليات', refresh: 'تحديث', logout: 'خروج', totalCoins: 'إجمالي العملات الموزعة', totalInvestors: 'المستثمرون المسجلون', priceMsg: 'السعر قابل للزيادة مع اقتراب موعد الإطلاق.', pending: 'انتظار', approved: 'مقبول', rejected: 'مرفوض', invalid_txid: 'رقم غير صحيح', used_txid: 'مستخدم سابقاً', amount_mismatch: 'خطأ بالمبلغ', wrong_network: 'شبكة خاطئة' }
+        en: { switcher: 'عربي', loginTitle: 'Investor Login', sendOtp: 'Send Code', verifyOtp: 'Verify', depositTitle: 'Deposit Address (TRC20)', copyHint: 'Tap address to copy', balanceLabel: 'Total SRMD Balance', usdLabel: 'Total Value:', buyTitle: 'Purchase Request', submitBtn: 'Submit Request', historyTitle: 'History', refresh: 'Refresh', logout: 'Logout', totalCoins: 'Total Allocated SRMD', totalInvestors: 'Active Investors', priceMsg: 'This price is subject to increase as launch approaches.', pending: 'Pending ⏳', approved: 'Approved ✅', rejected: 'Rejected ❌', invalid_txid: 'Invalid TXID', used_txid: 'Used TXID', amount_mismatch: 'Amount Mismatch', wrong_network: 'Wrong Network' },
+        ar: { switcher: 'EN', loginTitle: 'تسجيل دخول المستثمر', sendOtp: 'إرسال الرمز', verifyOtp: 'تأكيد', depositTitle: 'عنوان الإيداع (TRC20)', copyHint: 'اضغط على العنوان للنسخ', balanceLabel: 'رصيد سرمد الإجمالي', usdLabel: 'القيمة الإجمالية:', buyTitle: 'طلب شراء رصيد', submitBtn: 'إرسال الطلب للمراجعة', historyTitle: 'تاريخ العمليات', refresh: 'تحديث', logout: 'خروج', totalCoins: 'إجمالي العملات الموزعة', totalInvestors: 'المستثمرون المسجلون', priceMsg: 'هذا السعر نفسي وقابل للزيادة مع اقتراب موعد الإطلاق.', pending: 'انتظار', approved: 'مقبول', rejected: 'مرفوض', invalid_txid: 'رقم غير صحيح', used_txid: 'مستخدم مسبقاً', amount_mismatch: 'خطأ بالمبلغ', wrong_network: 'شبكة خاطئة' }
     };
 
     function startCooldown(id, text) {
@@ -125,13 +139,15 @@
     function toggleLang() {
         currentLang = currentLang === 'en' ? 'ar' : 'en';
         document.getElementById('main-html').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-        document.getElementById('body-tag').className = currentLang + "-mode";
+        document.getElementById('body-tag').className = currentLang === 'ar' ? 'ar-mode' : 'en-mode';
+        
         document.getElementById('lang-switcher').innerText = langData[currentLang].switcher;
         document.getElementById('t-login-title').innerText = langData[currentLang].loginTitle;
         document.getElementById('t-send-otp').innerText = langData[currentLang].sendOtp;
         document.getElementById('t-deposit-title').innerText = langData[currentLang].depositTitle;
+        document.getElementById('t-copy-hint').innerText = langData[currentLang].copyHint;
         document.getElementById('t-balance-label').innerText = langData[currentLang].balanceLabel;
-        document.getElementById('t-usd-label').innerHTML = `${langData[currentLang].usdLabel} <span id="total-usd">0.00</span> USDT`;
+        document.getElementById('t-usd-label').innerText = langData[currentLang].usdLabel;
         document.getElementById('t-buy-title').innerText = langData[currentLang].buyTitle;
         document.getElementById('t-submit-btn').innerText = langData[currentLang].submitBtn;
         document.getElementById('t-history-title').innerText = langData[currentLang].historyTitle;
@@ -139,13 +155,14 @@
         document.getElementById('t-logout').innerText = langData[currentLang].logout;
         document.getElementById('t-total-coins-label').innerText = langData[currentLang].totalCoins;
         document.getElementById('t-total-investors-label').innerText = langData[currentLang].totalInvestors;
+        loadInvestorData();
     }
 
     function alertPriceMsg() { alert(langData[currentLang].priceMsg); }
-    function copyWallet() { navigator.clipboard.writeText("TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N").then(() => alert("Copied!")); }
+    function copyWallet() { navigator.clipboard.writeText("TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N").then(() => alert(langData[currentLang].switcher === 'EN' ? "تم النسخ!" : "Copied!")); }
 
     function sendOTP() {
-        const p = document.getElementById('phone').value;
+        const p = document.getElementById('phone').value; if(!p) return;
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size: 'invisible'});
         auth.signInWithPhoneNumber(p, window.recaptchaVerifier).then(res => {
             window.confirmationResult = res; document.getElementById('otp-area').style.display = 'block';
@@ -159,29 +176,37 @@
             document.getElementById('auth-ui').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
             document.getElementById('header-user').innerText = user.phoneNumber;
-            
+
             db.collection('settings').doc('prices').onSnapshot(s => {
-                srmdPrice = s.data().srmd_price || 0.05;
-                document.getElementById('current-price').innerText = srmdPrice;
-                loadInvestorData();
+                if(s.exists) {
+                    srmdPrice = s.data().srmd_price || 0.05;
+                    document.getElementById('current-price').innerText = srmdPrice;
+                    updateTotalUSD();
+                }
             });
 
             db.collection('investors').onSnapshot(snap => {
-                let totalCoins = 0;
+                let totalC = 0;
                 document.getElementById('global-investors-count').innerText = snap.size;
-                snap.forEach(doc => { totalCoins += (doc.data().balance || 0); });
-                document.getElementById('global-srmd-count').innerText = totalCoins.toLocaleString();
+                snap.forEach(d => { totalC += (d.data().balance || 0); });
+                document.getElementById('global-srmd-count').innerText = totalC.toLocaleString();
+                loadInvestorData();
             });
         }
     });
 
+    function updateTotalUSD() {
+        const bal = parseFloat(document.getElementById('total-balance').innerText) || 0;
+        document.getElementById('total-usd').innerText = (bal * srmdPrice).toFixed(2);
+    }
+
     function loadInvestorData(isManual = false) {
         if(isManual) startCooldown('t-refresh-btn', langData[currentLang].refresh);
-        db.collection('investors').doc(auth.currentUser.phoneNumber).onSnapshot(doc => {
+        db.collection('investors').doc(auth.currentUser.phoneNumber).get().then(doc => {
             if (doc.exists) {
                 const bal = doc.data().balance || 0;
                 document.getElementById('total-balance').innerText = bal;
-                document.getElementById('total-usd').innerText = (bal * srmdPrice).toFixed(2);
+                updateTotalUSD();
                 const body = document.getElementById('history-body'); body.innerHTML = '';
                 (doc.data().requests || []).slice().reverse().forEach(req => {
                     let st = langData[currentLang][req.status] || req.status;
@@ -197,7 +222,7 @@
         startCooldown('t-submit-btn', langData[currentLang].submitBtn);
         db.collection('investors').doc(auth.currentUser.phoneNumber).set({
             requests: firebase.firestore.FieldValue.arrayUnion({ txid: tx, status: 'pending', timestamp: new Date() })
-        }, {merge: true}).then(() => { document.getElementById('txid-input').value = ''; });
+        }, {merge: true}).then(() => { document.getElementById('txid-input').value = ''; loadInvestorData(); });
     }
 </script>
 </body>
