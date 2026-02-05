@@ -33,70 +33,121 @@ body {
     overflow-x: hidden;
 }
 
-/* --- Styles for Sarmad Carousel (Slider) --- */
+/* --- Styles for Sarmad Carousel (Slider) - Enhanced --- */
 .sarmad-carousel-section {
     background-color: #000000;
     width: 100%;
-    padding: 20px 0 40px 0; /* تم تقليل المسافة العلوية */
+    padding: 20px 0 40px 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: visible; /* تغيير من hidden إلى visible لإظهار الأسهم خارج الإطار */
+}
+
+/* حاوية خارجية للسلايدر والأسهم */
+.carousel-wrapper {
+    position: relative;
+    width: 900px; /* عرض أكبر لاستيعاب الأسهم */
+    max-width: 95%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .carousel-container {
-    width: 800px; /* العرض */
-    max-width: 90%;
+    width: 800px;
+    max-width: 100%;
     position: relative;
     border: 2px solid #D4AF37;
     border-radius: 15px;
     box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
     overflow: hidden;
     background: #000;
-    direction: ltr; /* مهم جداً: إجبار الاتجاه لليسار لليمين لضمان عمل السلايدر */
+    direction: ltr;
+    flex: 1;
 }
 
 .carousel-slide {
     display: flex;
     width: 100%;
     height: 100%;
+    transition: transform 0.5s ease-in-out; /* إضافة انتقال سلس */
 }
 
 .carousel-img {
     width: 100%;
-    min-width: 100%; /* تملأ الحاوية بالكامل */
+    min-width: 100%;
     height: auto;
     display: block;
     cursor: pointer;
     object-fit: cover;
 }
 
-/* Navigation Buttons */
+/* Navigation Buttons - خارج الصورة */
 .nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.6);
+    position: static; /* تغيير من absolute إلى static */
+    background-color: rgba(0, 0, 0, 0.8);
     color: #D4AF37;
-    border: 1px solid #D4AF37;
-    font-size: 20px;
-    padding: 10px 15px;
+    border: 2px solid #D4AF37;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
     cursor: pointer;
     z-index: 10;
     border-radius: 50%;
     transition: all 0.3s ease;
     outline: none;
     user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .nav-btn:hover {
     background-color: #D4AF37;
     color: #000;
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.9);
+    transform: scale(1.1);
 }
 
-.prev-btn { left: 15px; }
-.next-btn { right: 15px; }
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+.prev-btn { order: -1; } /* يظهر على اليسار */
+.next-btn { order: 1; } /* يظهر على اليمين */
+
+/* مؤشرات السلايد */
+.carousel-indicators {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+.indicator-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid #D4AF37;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator-dot.active {
+    background-color: #D4AF37;
+    width: 30px;
+    border-radius: 5px;
+}
+
+.indicator-dot:hover {
+    background-color: rgba(212, 175, 55, 0.7);
+}
 
 /* Lightbox Styles */
 .lightbox-overlay {
@@ -141,6 +192,33 @@ body {
     to {transform: scale(1); opacity: 1;}
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+    .carousel-wrapper {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    .carousel-wrapper {
+        width: 100%;
+    }
+    
+    /* في الموبايل، نضع الأزرار أسفل السلايدر */
+    .prev-btn, .next-btn {
+        order: 2;
+    }
+    
+    .carousel-container {
+        order: 1;
+    }
+}
+
 /* Agreement Page Styles */
 .agreement-page {
     min-height: 100vh;
@@ -170,6 +248,18 @@ body {
 .agreement-subtitle {
     color: var(--grey);
     font-size: 1rem;
+}
+
+.version-badge {
+    display: inline-block;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-top: 10px;
+    font-family: 'Orbitron', sans-serif;
 }
 
 .lang-switch {
@@ -293,7 +383,7 @@ body {
 .agreement-btn {
     width: 100%;
     padding: 18px;
-    background: linear-gradient(135deg, var(--gold) 0%, #b8941f 100%);
+    background: var(--gold);
     color: #000;
     border: none;
     border-radius: 12px;
@@ -304,779 +394,879 @@ body {
     font-family: inherit;
 }
 
-.agreement-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+.agreement-btn:hover {
+    background: #e6c04a;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
 }
 
 .agreement-btn:disabled {
-    background: #333;
-    color: #666;
+    background: var(--grey);
     cursor: not-allowed;
+    opacity: 0.5;
 }
 
-.footer-note {
-    text-align: center;
-    color: var(--grey);
-    font-size: 0.8rem;
-    margin-top: 20px;
-}
-
-/* Wallet App Styles */
+/* ===== WALLET APP STYLES ===== */
 .wallet-app {
     display: none;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
-header {
-    background: #000;
-    padding: 20px 15px 10px 15px;
-    border-bottom: 2px solid var(--gold);
+#walletApp.wallet-app {
+    display: block !important;
 }
 
-.logo-container {
-    text-align: center;
-    margin-bottom: 15px;
+.hidden {
+    display: none !important;
 }
 
-.logo {
-    font-family: 'Orbitron', sans-serif;
-    color: var(--text);
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-}
-
-.sub-header {
+.header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 500px;
-    margin: 10px auto;
 }
 
-.user-id {
-    font-size: 0.75rem;
-    color: var(--text);
-    border: 1px solid #333;
-    padding: 5px 12px;
-    border-radius: 20px;
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-.clickable {
+.logo-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
     color: var(--gold);
-    border: 1px solid var(--gold);
-    background: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-    text-decoration: none;
-    font-size: 0.9rem;
+    letter-spacing: 2px;
 }
 
-.clickable:hover {
-    background: rgba(212, 175, 55, 0.1);
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.clickable:disabled {
-    color: var(--grey);
-    border-color: var(--grey);
-    cursor: not-allowed;
-    opacity: 0.6;
+.user-icon {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, var(--gold), #e6c04a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
 }
 
 .container {
-    max-width: 500px;
-    margin: auto;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
 }
 
 .card {
-    background: #0a0a0a;
-    border: 1px solid #222;
-    padding: 20px;
-    border-radius: 15px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
     margin-bottom: 20px;
-    text-align: center;
 }
 
-.stats-box {
-    display: flex;
-    justify-content: space-around;
-    padding: 15px 0;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #222;
-}
-
-.stat-item {
-    flex: 1;
-}
-
-.stat-label {
-    display: block;
-    font-size: 0.65rem;
-    color: var(--grey);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-}
-
-.stat-val {
+.card-title {
+    color: var(--gold);
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-title::before {
+    content: "◆";
     color: var(--gold);
-    font-family: 'Orbitron', sans-serif;
-}
-
-.balance-val {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: var(--text);
-    display: block;
-    margin: 10px 0;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.price-text {
-    direction: ltr !important;
-    unicode-bidi: bidi-override;
-    display: inline-block;
-    font-size: 0.85rem;
-    cursor: pointer;
-}
-
-.usd-val {
-    font-size: 0.9rem;
-    color: var(--text);
-    margin-top: 8px;
-    opacity: 0.8;
-}
-
-input, textarea {
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    background: #000;
-    border: 1px solid #333;
-    color: var(--text);
-    border-radius: 10px;
-    box-sizing: border-box;
-    text-align: center;
-    font-family: inherit;
-    font-size: 0.9rem;
-}
-
-textarea {
-    resize: none;
-    font-family: monospace;
-}
-
-.main-btn {
-    width: 100%;
-    margin-top: 10px;
-}
-
-.wallet-box {
-    background: #111;
-    color: var(--gold);
-    padding: 15px;
-    border-radius: 8px;
-    font-family: monospace;
-    cursor: pointer;
-    border: 1px dashed var(--gold);
-    display: block;
-    margin: 15px 0;
-    word-break: break-all;
-    font-size: 0.85rem;
-    transition: 0.2s;
-}
-
-.wallet-box:hover {
-    background: #1a1a1a;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
     font-size: 0.8rem;
-    margin-top: 15px;
 }
 
-td {
-    padding: 12px;
-    border-bottom: 1px solid #222;
+.balance-display {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 25px;
     text-align: center;
+    margin-bottom: 15px;
 }
 
-.st-pending { color: var(--orange); font-weight: bold; }
-.st-approved { color: var(--green); font-weight: bold; }
-.st-rejected { color: var(--red); font-weight: bold; }
+.balance-amount {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--gold);
+    font-family: 'Orbitron', sans-serif;
+}
 
-.reason-text {
-    font-size: 0.7rem;
-    color: #ff8888;
-    display: block;
+.balance-label {
+    color: var(--grey);
+    font-size: 0.9rem;
     margin-top: 5px;
 }
 
-.txid-preview {
-    font-family: monospace;
-    font-size: 0.75rem;
-    color: var(--grey);
+.usd-value {
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-top: 10px;
 }
 
-.char-counter {
-    font-size: 0.75rem;
-    color: var(--grey);
-    text-align: right;
-    margin-top: -5px;
+.info-box {
+    background: rgba(0, 255, 136, 0.05);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.info-box p {
+    color: var(--green);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.wallet-address {
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: 'Courier New', monospace;
+    color: var(--gold);
+    font-size: 0.85rem;
+    word-break: break-all;
     margin-bottom: 10px;
 }
 
-.char-counter.valid { color: var(--green); }
-.char-counter.invalid { color: var(--red); }
+.copy-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
 
-.empty-state {
+.copy-btn:hover {
+    background: #00ff99;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
     color: var(--grey);
-    padding: 30px;
-    text-align: center;
+    margin-bottom: 8px;
     font-size: 0.9rem;
 }
 
-.hidden { display: none !important; }
-
-.ar-mode { font-family: 'Tajawal', sans-serif; }
-
-[dir="ltr"] .terms-list li {
-    padding-right: 0;
-    padding-left: 30px;
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
 }
 
-[dir="ltr"] .terms-list li:before {
-    right: auto;
-    left: 0;
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
 }
 
-@media (max-width: 600px) {
-    .content-card, .agree-section { padding: 20px; }
-    .agreement-logo { font-size: 1.5rem; }
-    .lang-switch { top: 10px; left: 10px; padding: 6px 12px; font-size: 0.8rem; }
-    .carousel-container { width: 100%; border-radius: 0; border-left: none; border-right: none; }
-    .sarmad-carousel-section { padding-top: 10px; padding-bottom: 20px; }
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.submit-btn:hover {
+    background: #e6c04a;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.submit-btn:disabled {
+    background: var(--grey);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th {
+    background: var(--bg);
+    color: var(--gold);
+    padding: 12px;
+    text-align: right;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+}
+
+.history-table td {
+    padding: 15px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+.history-table tr:last-child td {
+    border-bottom: none;
+}
+
+.st-pending {
+    color: var(--orange);
+    font-weight: 600;
+}
+
+.st-approved {
+    color: var(--green);
+    font-weight: 600;
+}
+
+.st-rejected {
+    color: var(--red);
+    font-weight: 600;
+}
+
+.txid-preview {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--grey);
+}
+
+.reason-text {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--grey);
+    margin-top: 3px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--grey);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.empty-state small {
+    color: var(--grey);
+    opacity: 0.7;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    font-family: 'Orbitron', sans-serif;
+}
+
+.stat-label {
+    color: var(--grey);
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.refresh-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.refresh-btn:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.logout-btn {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.85rem;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.char-counter {
+    font-size: 0.8rem;
+    color: var(--grey);
+    margin-top: 5px;
+    text-align: left;
+}
+
+.char-counter.valid {
+    color: var(--green);
+}
+
+.char-counter.invalid {
+    color: var(--red);
+}
+
+.price-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--gold);
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.price-badge:hover {
+    background: rgba(212, 175, 55, 0.2);
+}
+
+.auth-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+}
+
+.auth-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.auth-title {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.auth-btn:hover {
+    background: #e6c04a;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .balance-amount {
+        font-size: 2.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .container {
+        padding: 15px;
+    }
 }
 </style>
 </head>
-
 <body id="body-tag">
 
-<div id="sarmadLightbox" class="lightbox-overlay">
-    <span class="close-btn">&times;</span>
-    <img class="lightbox-content" id="lightboxImg">
-</div>
+<!-- Language Switcher -->
+<button class="lang-switch" id="lang-switcher" onclick="toggleLang()">English</button>
 
-<div id="agreementPage" class="agreement-page">
-    <button class="lang-switch" onclick="toggleAgreementLang()">English</button>
-    
+<!-- Agreement Page -->
+<div class="agreement-page" id="agreementPage">
     <div class="agreement-container">
-        
-        <div class="sarmad-carousel-section">
-            <div class="carousel-container">
-                <button class="nav-btn prev-btn" id="prevBtn">&#10094;</button>
-                
-                <div class="carousel-slide">
-                    <img src="protocol-tenure-rewards.png" alt="Tenure Rewards" class="carousel-img" id="lastClone">
-                    
-                    <img src="ai-managed-gateway-core.png" alt="AI Gateway" class="carousel-img">
-                    <img src="quantum-fortress-security.png" alt="Quantum Security" class="carousel-img">
-                    <img src="proof-of-utility-vs-waste.png" alt="Proof of Utility" class="carousel-img">
-                    <img src="frictionless-financial-freedom.png" alt="Financial Freedom" class="carousel-img">
-                    <img src="protocol-tenure-rewards.png" alt="Tenure Rewards" class="carousel-img">
-                    
-                    <img src="ai-managed-gateway-core.png" alt="AI Gateway" class="carousel-img" id="firstClone">
-                </div>
-
-                <button class="nav-btn next-btn" id="nextBtn">&#10095;</button>
-            </div>
-        </div>
         <div class="agreement-header">
             <div class="agreement-logo">SARMAD PROTOCOL</div>
-            <div class="agreement-subtitle" id="agreeSubtitle">اتفاقية شراء عملات SRMD المستقبلية</div>
+            <div class="agreement-subtitle">اتفاقية شراء عملت SRMD المستقبلية</div>
+            <div class="version-badge">v1.2</div>
+        </div>
+
+        <!-- Carousel Section - Enhanced -->
+        <div class="sarmad-carousel-section">
+            <div class="carousel-wrapper">
+                <!-- Previous Button -->
+                <button class="nav-btn prev-btn" onclick="prevSlide()" aria-label="Previous">❮</button>
+                
+                <!-- Carousel Container -->
+                <div class="carousel-container">
+                    <div class="carousel-slide" id="carouselSlide">
+                        <img src="https://i.postimg.cc/RVt4ZXBM/file.jpg" alt="AI-Managed Gateway Core" class="carousel-img" onclick="openLightbox(0)">
+                        <img src="https://i.postimg.cc/Y0dP5whj/file.jpg" alt="Core Network Hub" class="carousel-img" onclick="openLightbox(1)">
+                        <img src="https://i.postimg.cc/Wpd4hWTW/file.jpg" alt="SRMD Protocol" class="carousel-img" onclick="openLightbox(2)">
+                        <img src="https://i.postimg.cc/0j8FgZh6/file.jpg" alt="Project Overview" class="carousel-img" onclick="openLightbox(3)">
+                    </div>
+                    
+                    <!-- Indicators -->
+                    <div class="carousel-indicators" id="carouselIndicators"></div>
+                </div>
+                
+                <!-- Next Button -->
+                <button class="nav-btn next-btn" onclick="nextSlide()" aria-label="Next">❯</button>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+            <span class="close-btn">&times;</span>
+            <img class="lightbox-content" id="lightboxImg">
         </div>
 
         <div class="content-card">
-            <div class="section-title" id="termsTitle">📋 بنود الاتفاقية</div>
-            
-            <ul class="terms-list" id="termsList">
+            <h2 class="section-title">📋 بنود الاتفاقية</h2>
+            <ul class="terms-list">
                 <li>
                     <strong>طبيعة المشروع</strong>
                     يُقر المستثمر بأن Sarmad Protocol هو مشروع ذكاء اصطناعي مبني على شبكة لامركزية خاصة. العملة (SRMD) هي أداة دفع لاشتراكات الاستخدام الثقيلة فقط، وليست ورقة مالية أو سهم ملكية.
                 </li>
                 <li>
-                    <strong>آلية الشراء والتوزيع</strong>
-                    يتم شراء عملات SRMD بسعر ابتداءا من (0.05 USDT) وتوزيعها على المستثمر بشكل يومي متساوٍ على كل المستثمرين بإنتاج يومي مقداره 86400 سرمد تقريبا ولا يمكن زيادة الإنتاج في أي حال من الأحوال فور بدء انتاج بلوكات الشبكة الرئيسية وسيتم إغلاق باب الشراء هذا قبل الإطلاق بأيام.
+                    <strong>مخاطر الاستثمار</strong>
+                    الاستثمار في مشاريع العملات الرقمية والذكاء الاصطناعي ينطوي على مخاطر عالية، بما في ذلك فقدان رأس المال بالكامل.
                 </li>
                 <li>
-                    <strong>السعر المستهدف</strong>
-                    يُعلم المستثمر بأن السعر المستهدف عند الإطلاق (0.50 USDT) هو تقدير تسويقي بحت وغير مضمون. السعر الفعلي يتحدد حصرياً حسب العرض والطلب في السوق الحر.
+                    <strong>لا ضمانات مالية</strong>
+                    لا يضمن المشروع أي عوائد أو أرباح مستقبلية. قيمة العملة قد ترتفع أو تنخفض بناءً على السوق.
                 </li>
                 <li>
-                    <strong>مخاطر الاستثمار الكاملة</strong>
-                    يقر المستثمر بأنه يفهم أن استثماره قد يؤدي إلى خسارة كلية للمبلغ المدفوع. لا توجد ضمانات للعائد أو رأس المال أو السيولة.
+                    <strong>آلية الشراء</strong>
+                    يتم شراء SRMD عن طريق إرسال USDT (TRC20) إلى المحفظة المحددة وإدخال رقم المعاملة (TXID) في النظام.
                 </li>
                 <li>
-                    <strong>فشل المشروع</strong>
-                    في حال فشل إطلاق الشبكة أو عدم تحقيق الأهداف التقنية أو التجارية، لا يحق للمستثمر المطالبة بأي تعويض أو استرداد للأموال المدفوعة.
+                    <strong>التحقق والموافقة</strong>
+                    يتم مراجعة كل معاملة يدويًا. قد يستغرق التحقق من 24 إلى 72 ساعة.
                 </li>
                 <li>
-                    <strong>التأخير في الإطلاق</strong>
-                    قد يتأخر إطلاق الشبكة لأسباب تقنية أو تنظيمية دون إشعار مسبق، ولا يترتب على ذلك أي التزامات مالية على Sarmad Protocol.
+                    <strong>سياسة عدم الاسترداد</strong>
+                    جميع عمليات الشراء نهائية ولا يمكن استردادها. تأكد من قرارك قبل الإرسال.
                 </li>
                 <li>
-                    <strong>استخدام العملة المحدود</strong>
-                    العملة مخصصة حصرياً لدفع اشتراكات استخدام الذكاء الاصطناعي للمهام الثقيلة. المحادثات النصية للحصول على المعلومات مجانية ولا تتطلب عملات.
+                    <strong>الامتثال القانوني</strong>
+                    المستثمر مسؤول عن الامتثال للقوانين المحلية في بلده. المشروع لا يقدم استشارات قانونية أو مالية.
                 </li>
                 <li>
-                    <strong>غياب الضمانات</strong>
-                    لا تتعهد Sarmad Protocol بإدراج العملة في أي منصة تداول. إمكانية بيع أو تحويل العملة غير مضمونة وتعتمد على سوق داخلي حر.
-                </li>
-                <li>
-                    <strong>المسؤولية القانونية والضريبية</strong>
-                    يتحمل المستثمر كامل المسؤولية عن الامتثال لقوانين بلده و التزاماته الضريبية. Sarmad Protocol غير مسؤولة عن أي عواقب قانونية أو ضريبية.
-                </li>
-                <li>
-                    <strong>التنازل النهائي عن الدعاوى</strong>
-                    بموجب هذه الاتفاقية، يتنازل المستثمر نهائياً عن أي حق في رفع دعاوى قضائية أو مطالبات ضد Sarmad Protocol أو فريقها بخصوص هذا الاستثمار.
+                    <strong>حماية البيانات</strong>
+                    يتم جمع رقم الهاتف فقط للمصادقة والأمان. لن يتم مشاركة بياناتك مع أطراف ثالثة.
                 </li>
             </ul>
+        </div>
 
-            <div class="highlight-box">
-                <div class="highlight-title" id="riskTitle">⚠️ تنبيه هام</div>
-                <p id="riskText">
-                    هذا الاستثمار عالي المخاطر وغير مناسب للجميع. قد يخسر المستثمر كامل مبلغه. لا يجب استثمار مال لا يتحمل المستثمر خسارته.
-                </p>
-            </div>
+        <div class="highlight-box">
+            <div class="highlight-title">⚠️ تحذير مهم</div>
+            <p>هذا المشروع في مراحل التطوير المبكرة. قد تحدث تغييرات جذرية في الخطة أو التوقيت أو الآليات التقنية. الاستثمار يعني قبولك لهذه المخاطر.</p>
         </div>
 
         <div class="agree-section">
             <label class="checkbox-container">
-                <input type="checkbox" id="agreeCheck" onchange="checkAgreement()">
-                <span class="checkbox-text" id="agreeText">
-                    <strong>يقر المستثمر بأنه قرأ جميع البنود أعلاه</strong> ووافق عليها كلياً. يفهم المستثمر طبيعة المشروع والمخاطر المحيطة به ويتنازل عن أي حقوق قانونية قد تترتب على فشل المشروع أو عدم تحقيق التوقعات.
+                <input type="checkbox" id="agreeCheckbox">
+                <span class="checkbox-text">
+                    <strong>أوافق على جميع البنود أعلاه</strong><br>
+                    أقر بأنني قرأت وفهمت جميع الشروط والمخاطر، وأوافق على المتابعة على مسؤوليتي الخاصة.
                 </span>
             </label>
         </div>
 
-        <button class="agreement-btn" id="continueBtn" onclick="acceptAgreement()" disabled>
-            الموافقة والمتابعة للتسجيل
+        <button class="agreement-btn" id="proceedBtn" disabled onclick="proceedToApp()">
+            المتابعة إلى التطبيق →
         </button>
-        
-        <div class="footer-note" id="footerNote">
-            بالضغط على "الموافقة"، يؤكد المستثمر موافقته القانونية على جميع الشروط أعلاه
-        </div>
     </div>
 </div>
 
-<div id="walletApp" class="wallet-app">
-    <header>
-        <div class="logo-container"><div class="logo">SARMAD PROTOCOL</div></div>
-        <div class="sub-header">
-            <div id="header-user" class="user-id">Guest</div>
-            <button class="clickable" onclick="toggleLang()" id="lang-switcher">عربي</button>
+<!-- Wallet App -->
+<div class="wallet-app" id="walletApp">
+    <!-- Auth UI -->
+    <div id="auth-ui">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-title" id="t-login-title">تسجيل الدخول</div>
+                <div class="input-group">
+                    <label>رقم الهاتف (مع رمز الدولة)</label>
+                    <input type="tel" id="phone" placeholder="+9647xxxxxxxxx">
+                </div>
+                <button class="auth-btn" id="t-send-otp" onclick="sendOTP()">إرسال رمز التحقق</button>
+                <div id="recaptcha-container"></div>
+                <div class="input-group hidden" id="otp-area">
+                    <label>رمز التحقق (OTP)</label>
+                    <input type="text" id="otp" placeholder="123456">
+                    <button class="auth-btn" id="t-verify-otp" onclick="verifyOTP()">تأكيد الرمز</button>
+                </div>
+            </div>
         </div>
-    </header>
-    
-    <div class="container">
-        <div id="auth-ui" class="card">
-            <h3 id="t-login-title">Investor Login</h3>
-            <input type="tel" id="phone" placeholder="+962xxxxxxxxx" autocomplete="tel">
-            <div id="recaptcha-container"></div>
-            <button class="clickable main-btn" onclick="sendOTP()" id="t-send-otp">Send Code</button>
-            <div id="otp-area" class="hidden">
-                <input type="text" id="otp" placeholder="000000" maxlength="6" autocomplete="one-time-code">
-                <button class="clickable main-btn" onclick="verifyOTP()" id="t-verify-otp">Verify</button>
+    </div>
+
+    <!-- Main UI -->
+    <div id="main-ui" class="hidden">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo-text">SARMAD</div>
+                <div class="version-badge">v1.2</div>
+            </div>
+            <div class="user-section">
+                <span id="header-user">User</span>
+                <div class="user-icon">👤</div>
+                <button class="logout-btn" id="t-logout" onclick="handleLogout()">تسجيل خروج</button>
             </div>
         </div>
 
-        <div id="main-ui" class="hidden">
-            <div class="stats-box">
-                <div class="stat-item">
-                    <span class="stat-label" id="t-total-coins-label">Total Sold SRMD</span>
-                    <span class="stat-val" id="global-srmd-count">0</span>
+        <div class="container">
+            <!-- Global Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="global-investors-count">0</div>
+                    <div class="stat-label" id="t-total-investors-label">إجمالي المستثمرين</div>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label" id="t-total-investors-label">Active Investors</span>
-                    <span class="stat-val" id="global-investors-count">0</span>
+                <div class="stat-card">
+                    <div class="stat-value" id="global-srmd-count">0</div>
+                    <div class="stat-label" id="t-total-coins-label">إجمالي عملات SRMD</div>
                 </div>
             </div>
 
-            <div class="card" style="border:1px dashed var(--gold);">
-                <span id="t-deposit-title" style="font-size:0.85rem;font-weight:bold;">Deposit Address (USDT-TRC20)</span>
-                <div class="wallet-box" onclick="copyWallet()">TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N</div>
-                <small id="t-copy-hint" style="color:var(--grey);font-size:0.75rem;">💡Tap address to copy</small>
-            </div>
-
+            <!-- Balance Card -->
             <div class="card">
-                <span id="t-balance-label" style="font-size:0.9rem;color:var(--grey);">Your SRMD Balance</span>
-                <span class="balance-val" id="total-balance">0.00</span>
-                <span class="clickable price-text" id="t-price-info" onclick="showPriceInfo()">
-                    1 SRMD = <span id="current-price">0.00</span> USDT
-                </span>
-                
-                <div class="usd-val">
-                    <span id="t-usd-label">Total Value:</span> <span id="total-usd" style="color:var(--gold);font-weight:bold;">0.00</span> USDT
-                </div>
-            </div>
-
-            <div class="card">
-                <h4 id="t-buy-title" style="margin:0 0 15px 0;">Purchase Request</h4>
-                <textarea id="txid-input" placeholder="Enter your 64-character TXID here" maxlength="64" oninput="checkTxLength()" rows="3"></textarea>
-                <div class="char-counter" id="char-counter">0/64 characters</div>
-                <button class="clickable main-btn" onclick="submitNewRequest()" id="t-submit-btn" disabled>Submit Request</button>
-                <small style="display:block;margin-top:10px;color:var(--grey);font-size:0.75rem;" id="t-txid-hint">
-                    ⚠️ Make sure to send USDT to the address above before submitting
-                </small>
-            </div>
-
-            <div class="card">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-                    <h4 id="t-history-title" style="margin:0;">Transaction History</h4>
-                    <button class="clickable" onclick="loadInvestorData(true)" id="t-refresh-btn" style="font-size:0.7rem;">Refresh</button>
-                </div>
-                <div id="history-container">
-                    <table id="history-table" class="hidden">
-                        <thead>
-                            <tr>
-                                <th style="text-align:left;color:var(--grey);font-size:0.75rem;padding:10px;">TXID</th>
-                                <th style="text-align:center;color:var(--grey);font-size:0.75rem;padding:10px;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-body"></tbody>
-                    </table>
-                    <div id="empty-history" class="empty-state">
-                        <p>📋 No transactions yet</p>
-                        <small>Your purchase requests will appear here</small>
+                <h3 class="card-title" id="t-balance-label">رصيدي من SRMD</h3>
+                <div class="balance-display">
+                    <div class="balance-amount" id="total-balance">0.00</div>
+                    <div class="balance-label">SRMD</div>
+                    <div class="usd-value">
+                        <span id="t-usd-label">≈ $</span>
+                        <span id="total-usd">0.00</span>
                     </div>
                 </div>
+                <div class="price-badge" onclick="showPriceInfo()">
+                    💰 السعر الحالي: $<span id="current-price">0.00</span>
+                </div>
             </div>
 
-            <button class="clickable" style="width:100%;margin-top:10px;border:none;color:var(--grey)" onclick="handleLogout()" id="t-logout">Logout</button>
+            <!-- Deposit Instructions -->
+            <div class="card">
+                <h3 class="card-title" id="t-deposit-title">إيداع USDT</h3>
+                <div class="info-box">
+                    <p id="t-copy-hint">⬇️ انسخ العنوان وأرسل USDT (TRC20) فقط</p>
+                </div>
+                <div class="wallet-address">TH9uvbgRL4gG2Ad3255hWTHco6jQt13G6N</div>
+                <button class="copy-btn" onclick="copyWallet()">📋 نسخ العنوان</button>
+            </div>
+
+            <!-- Submit Transaction -->
+            <div class="card">
+                <h3 class="card-title" id="t-buy-title">تقديم طلب شراء</h3>
+                <div class="input-group">
+                    <label id="t-txid-hint">أدخل رقم المعاملة (TXID) - يجب أن يكون 64 حرف بالضبط</label>
+                    <input 
+                        type="text" 
+                        id="txid-input" 
+                        placeholder="a1b2c3d4e5f6..." 
+                        maxlength="64"
+                        oninput="checkTxLength()"
+                    >
+                    <div class="char-counter" id="char-counter">0/64 characters</div>
+                </div>
+                <button class="submit-btn" id="t-submit-btn" onclick="submitNewRequest()" disabled>
+                    إرسال الطلب
+                </button>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="card">
+                <h3 class="card-title" id="t-history-title">سجل المعاملات</h3>
+                <button class="refresh-btn" id="t-refresh-btn" onclick="loadInvestorData(true)">
+                    🔄 تحديث
+                </button>
+                <table class="history-table" id="history-table">
+                    <thead>
+                        <tr>
+                            <th>TXID</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body"></tbody>
+                </table>
+                <div class="empty-state hidden" id="empty-history">
+                    <p>لا توجد معاملات بعد</p>
+                    <small>قم بإرسال USDT وإدخال TXID لبدء الاستثمار</small>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div style="text-align: center; color: #444; font-size: 0.7rem; margin-top: 30px; padding-bottom: 20px;">
-System Version: V1.1
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
 <script>
-// --- CAROUSEL LOGIC ---
-document.addEventListener('DOMContentLoaded', () => {
-    // Only run if carousel exists
-    const carouselSlide = document.querySelector('.carousel-slide');
-    if(!carouselSlide) return;
+// ===== Enhanced Carousel Functionality =====
+let currentSlideIndex = 0;
+const slides = document.querySelectorAll('.carousel-img');
+const totalSlides = slides.length;
+let autoSlideInterval;
+const SLIDE_INTERVAL = 4000; // 4 seconds
 
-    const carouselImages = document.querySelectorAll('.carousel-slide img');
-    const prevBtn = document.querySelector('#prevBtn');
-    const nextBtn = document.querySelector('#nextBtn');
-
-    let counter = 1;
-    let size = 0;
-    let slideInterval;
-
-    // Ensure images are loaded before calculating width
-    const firstImg = carouselImages[0];
-    if (firstImg.complete) {
-        initCarousel();
-    } else {
-        firstImg.onload = initCarousel;
+// إنشاء المؤشرات
+function createIndicators() {
+    const indicatorsContainer = document.getElementById('carouselIndicators');
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'indicator-dot';
+        if (i === 0) dot.classList.add('active');
+        dot.onclick = () => goToSlide(i);
+        indicatorsContainer.appendChild(dot);
     }
+}
 
-    function initCarousel() {
-        size = carouselImages[0].clientWidth;
-        // Move to first real image (skip clone)
-        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-        startSlideShow();
-    }
-
-    // Update size on resize
-    window.addEventListener('resize', () => {
-        if(carouselImages[0]) {
-            size = carouselImages[0].clientWidth;
-            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-        }
+// تحديث المؤشرات
+function updateIndicators() {
+    const dots = document.querySelectorAll('.indicator-dot');
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlideIndex);
     });
+}
 
-    const slideNext = () => {
-        if (counter >= carouselImages.length - 1) return;
-        carouselSlide.style.transition = "transform 0.5s ease-in-out";
-        counter++;
-        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-    };
+// الانتقال إلى شريحة معينة
+function goToSlide(index) {
+    currentSlideIndex = index;
+    updateCarousel();
+    resetAutoSlide();
+}
 
-    const slidePrev = () => {
-        if (counter <= 0) return;
-        carouselSlide.style.transition = "transform 0.5s ease-in-out";
-        counter--;
-        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-    };
+// تحديث عرض السلايد
+function updateCarousel() {
+    const slideContainer = document.getElementById('carouselSlide');
+    const offset = -currentSlideIndex * 100;
+    slideContainer.style.transform = `translateX(${offset}%)`;
+    updateIndicators();
+}
 
-    // Button Listeners
-    nextBtn.addEventListener('click', () => {
-        slideNext();
-        resetTimer();
-    });
+// الانتقال للشريحة التالية
+function nextSlide() {
+    currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+    updateCarousel();
+    resetAutoSlide();
+}
 
-    prevBtn.addEventListener('click', () => {
-        slidePrev();
-        resetTimer();
-    });
+// الانتقال للشريحة السابقة
+function prevSlide() {
+    currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+    updateCarousel();
+    resetAutoSlide();
+}
 
-    // Infinite Loop Logic (Transition End)
-    carouselSlide.addEventListener('transitionend', () => {
-        if (carouselImages[counter].id === 'lastClone') {
-            carouselSlide.style.transition = "none";
-            counter = carouselImages.length - 2;
-            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-        }
-        if (carouselImages[counter].id === 'firstClone') {
-            carouselSlide.style.transition = "none";
-            counter = carouselImages.length - counter;
-            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-        }
-    });
+// بدء التشغيل التلقائي
+function startAutoSlide() {
+    autoSlideInterval = setInterval(nextSlide, SLIDE_INTERVAL);
+}
 
-    // Auto Play Logic
-    function startSlideShow() {
-        // Clear existing to avoid multiples
-        if(slideInterval) clearInterval(slideInterval);
-        slideInterval = setInterval(slideNext, 3000); // 3 seconds
-    }
+// إيقاف وإعادة تشغيل التلقائي
+function resetAutoSlide() {
+    clearInterval(autoSlideInterval);
+    startAutoSlide();
+}
 
-    function stopSlideShow() {
-        clearInterval(slideInterval);
-    }
-
-    function resetTimer() {
-        stopSlideShow();
-        startSlideShow();
-    }
-
-    // Pause on hover
-    const container = document.querySelector('.carousel-container');
-    container.addEventListener('mouseenter', stopSlideShow);
-    container.addEventListener('mouseleave', startSlideShow);
-
-    // --- LIGHTBOX LOGIC ---
-    const lightbox = document.getElementById('sarmadLightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const closeBoxBtn = document.querySelector('.close-btn');
-
-    carouselImages.forEach(img => {
-        img.addEventListener('click', function() {
-            lightbox.style.display = "flex";
-            lightboxImg.src = this.src;
-            stopSlideShow(); // Stop slider while zooming
-        });
-    });
-
-    closeBoxBtn.addEventListener('click', () => {
-        lightbox.style.display = "none";
-        startSlideShow();
-    });
-
-    lightbox.addEventListener('click', (e) => {
-        if (e.target !== lightboxImg) {
-            lightbox.style.display = "none";
-            startSlideShow();
-        }
-    });
+// إيقاف التشغيل التلقائي عند التمرير
+const carouselContainer = document.querySelector('.carousel-container');
+carouselContainer.addEventListener('mouseenter', () => {
+    clearInterval(autoSlideInterval);
 });
 
-// --- FIREBASE & WALLET LOGIC ---
+carouselContainer.addEventListener('mouseleave', () => {
+    startAutoSlide();
+});
+
+// Lightbox Functions
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const imageUrls = [
+    'https://i.postimg.cc/RVt4ZXBM/file.jpg',
+    'https://i.postimg.cc/Y0dP5whj/file.jpg',
+    'https://i.postimg.cc/Wpd4hWTW/file.jpg',
+    'https://i.postimg.cc/0j8FgZh6/file.jpg'
+];
+
+function openLightbox(index) {
+    lightboxImg.src = imageUrls[index];
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    lightbox.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// إغلاق عند الضغط على ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.style.display === 'flex') {
+        closeLightbox();
+    }
+});
+
+// منع إغلاق عند الضغط على الصورة
+lightboxImg.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+// تهيئة السلايدر عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    createIndicators();
+    updateCarousel();
+    startAutoSlide();
+});
+
+// ===== Firebase Configuration =====
 const firebaseConfig = {
-    apiKey: "AIzaSyBVyEPs_xvz9Oryk-jpLev4ja7Sb1P6RaM",
-    authDomain: "sarmad-web.firebaseapp.com",
-    projectId: "sarmad-web",
-    storageBucket: "sarmad-web.firebasestorage.app",
-    messagingSenderId: "687271413195",
-    appId: "1:687271413195:web:f9564027c56ed0efb7e24e"
+    apiKey: "AIzaSyDWy8uqAX0Jg6I0Q75D_5r3UYWcq2fMMdo",
+    authDomain: "sarmad-b6d54.firebaseapp.com",
+    projectId: "sarmad-b6d54",
+    storageBucket: "sarmad-b6d54.firebasestorage.app",
+    messagingSenderId: "1043316768034",
+    appId: "1:1043316768034:web:72b94f2b067edbcdf30dd2"
 };
+
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-let currentLang = 'en';
+let confirmationResult;
 let srmdPrice = 0;
-let confirmationResult = null;
-let agreementAccepted = false;
-
-// Data Objects
-const agreementData = {
-    ar: {
-        subtitle: "اتفاقية شراء عملات SRMD المستقبلية",
-        termsTitle: "📋 بنود الاتفاقية",
-        terms: [
-            { title: "طبيعة المشروع", text: "يُقر المستثمر بأن Sarmad Protocol هو مشروع ذكاء اصطناعي مبني على شبكة لامركزية خاصة. العملة (SRMD) هي أداة دفع لاشتراكات الاستخدام الثقيلة فقط، وليست ورقة مالية أو سهم ملكية." },
-            { title: "آلية الشراء والتوزيع", text: "يتم شراء عملات SRMD بسعر ابتداءا من (0.05 USDT) وتوزيعها على المستثمر بشكل يومي متساوٍ على كل المستثمرين بإنتاج يومي مقداره 86400 سرمد تقريبا ولا يمكن زيادة الإنتاج في أي حال من الأحوال فور بدء انتاج بلوكات الشبكة الرئيسية وسيتم إغلاق باب الشراء هذا قبل الإطلاق بأيام." },
-            { title: "السعر المستهدف", text: "يُعلم المستثمر بأن السعر المستهدف عند الإطلاق (0.50 USDT) هو تقدير تسويقي بحت وغير مضمون. السعر الفعلي يتحدد حصرياً حسب العرض والطلب في السوق الحر." },
-            { title: "مخاطر الاستثمار الكاملة", text: "يقر المستثمر بأنه يفهم أن استثماره قد يؤدي إلى خسارة كلية للمبلغ المدفوع. لا توجد ضمانات للعائد أو رأس المال أو السيولة." },
-            { title: "فشل المشروع", text: "في حال فشل إطلاق الشبكة أو عدم تحقيق الأهداف التقنية أو التجارية، لا يحق للمستثمر المطالبة بأي تعويض أو استرداد للأموال المدفوعة." },
-            { title: "التأخير في الإطلاق", text: "قد يتأخر إطلاق الشبكة لأسباب تقنية أو تنظيمية دون إشعار مسبق، ولا يترتب على ذلك أي التزامات مالية على Sarmad Protocol." },
-            { title: "استخدام العملة المحدود", text: "العملة مخصصة حصرياً لدفع اشتراكات استخدام الذكاء الاصطناعي للمهام الثقيلة. المحادثات النصية للحصول على المعلومات مجانية ولا تتطلب عملات." },
-            { title: "غياب الضمانات", text: "لا تتعهد Sarmad Protocol بإدراج العملة في أي منصة تداول. إمكانية بيع أو تحويل العملة غير مضمونة وتعتمد على سوق داخلي حر." },
-            { title: "المسؤولية القانونية والضريبية", text: "يتحمل المستثمر كامل المسؤولية عن الامتثال لقوانين بلده و التزاماته الضريبية. Sarmad Protocol غير مسؤولة عن أي عواقب قانونية أو ضريبية." },
-            { title: "التنازل النهائي عن الدعاوى", text: "بموجب هذه الاتفاقية، يتنازل المستثمر نهائياً عن أي حق في رفع دعاوى قضائية أو مطالبات ضد Sarmad Protocol أو فريقها بخصوص هذا الاستثمار." }
-        ],
-        riskTitle: "⚠️ تنبيه هام",
-        riskText: "هذا الاستثمار عالي المخاطر وغير مناسب للجميع. قد يخسر المستثمر كامل مبلغه. لا يجب استثمار مال لا يتحمل المستثمر خسارته.",
-        agreeText: "<strong>يقر المستثمر بأنه قرأ جميع البنود أعلاه</strong> ووافق عليها كلياً. يفهم المستثمر طبيعة المشروع والمخاطر المحيطة به ويتنازل عن أي حقوق قانونية قد تترتب على فشل المشروع أو عدم تحقيق التوقعات.",
-        button: "الموافقة والمتابعة للتسجيل",
-        footer: "بالضغط على 'الموافقة'، يؤكد المستثمر موافقته القانونية على جميع الشروط أعلاه",
-        langBtn: "English"
-    },
-    en: {
-        subtitle: "SRMD Token Purchase Agreement",
-        termsTitle: "📋 Terms of Agreement",
-        terms: [
-            { title: "Project Nature", text: "The Investor acknowledges that Sarmad Protocol is an AI project built on a private decentralized network. The token (SRMD) is a payment tool for heavy usage subscriptions only, not a security or equity share." },
-            { title: "Purchase & Distribution", text: "SRMD tokens are purchased at starting price (0.05 USDT) and distributed to Investors equally daily (approx 86400 SRMD/day) upon mainnet launch. Production cannot be increased. Purchase closes days before launch." },
-            { title: "Target Price", text: "The Investor is informed that the target launch price (0.50 USDT) is a pure marketing estimate and NOT guaranteed. Actual price is determined solely by free market supply and demand." },
-            { title: "Full Investment Risks", text: "The Investor acknowledges understanding that the investment may result in total loss of paid amount. No guarantees for return, capital, or liquidity." },
-            { title: "Project Failure", text: "In case of network launch failure or failure to achieve technical/commercial goals, the Investor has no right to claim compensation or refund of paid funds." },
-            { title: "Launch Delay", text: "Network launch may be delayed for technical or regulatory reasons without prior notice, with no financial liability on Sarmad Protocol." },
-            { title: "Limited Token Usage", text: "Token is exclusively for paying AI heavy usage subscriptions. Text conversations for information are free and require no tokens." },
-            { title: "No Guarantees", text: "Sarmad Protocol does not commit to listing token on any exchange. Ability to sell or transfer is not guaranteed and depends on a free internal market." },
-            { title: "Legal & Tax Liability", text: "The Investor bears full responsibility for compliance with country laws and tax obligations. Sarmad Protocol is not liable for any legal or tax consequences." },
-            { title: "Final Waiver of Claims", text: "By this agreement, the Investor permanently waives any right to file lawsuits or claims against Sarmad Protocol or its team regarding this investment." }
-        ],
-        riskTitle: "⚠️ Important Warning",
-        riskText: "This is a high-risk investment not suitable for everyone. The Investor may lose entire amount. Do not invest money the Investor cannot afford to lose.",
-        agreeText: "<strong>The Investor confirms having read all terms above</strong> and fully agrees to them. The Investor understands project nature and associated risks and waives any legal rights arising from project failure or unmet expectations.",
-        button: "Agree and Continue to Registration",
-        footer: "By clicking 'Agree', the Investor confirms legal acceptance of all terms above",
-        langBtn: "عربي"
-    }
-};
+let currentLang = 'ar';
 
 const langData = {
+    ar: {
+        switcher: 'English',
+        loginTitle: 'تسجيل الدخول',
+        sendOtp: 'إرسال رمز التحقق',
+        verifyOtp: 'تأكيد الرمز',
+        depositTitle: 'إيداع USDT',
+        copyHint: '⬇️ انسخ العنوان وأرسل USDT (TRC20) فقط',
+        balanceLabel: 'رصيدي من SRMD',
+        usdLabel: '≈ $',
+        buyTitle: 'تقديم طلب شراء',
+        submitBtn: 'إرسال الطلب',
+        historyTitle: 'سجل المعاملات',
+        refresh: '🔄 تحديث',
+        logout: 'تسجيل خروج',
+        totalCoins: 'إجمالي عملات SRMD',
+        totalInvestors: 'إجمالي المستثمرين',
+        txidHint: 'أدخل رقم المعاملة (TXID) - يجب أن يكون 64 حرف بالضبط',
+        pending: 'قيد المراجعة',
+        approved: 'تمت الموافقة',
+        rejected: 'مرفوض',
+        invalid_txid: 'TXID غير صالح',
+        already_used: 'تم استخدام هذا TXID مسبقاً',
+        no_transaction: 'لم يتم العثور على المعاملة',
+        noHistory: 'لا توجد معاملات بعد',
+        noHistoryDesc: 'قم بإرسال USDT وإدخال TXID لبدء الاستثمار',
+        enterPhone: 'الرجاء إدخال رقم هاتف صالح',
+        enterOtp: 'الرجاء إدخال رمز التحقق',
+        txidInvalid: 'رقم المعاملة يجب أن يكون 64 حرف بالضبط',
+        txidUsed: 'تم استخدام هذا الرقم مسبقاً',
+        txidSuccess: 'تم إرسال طلبك بنجاح! سيتم المراجعة خلال 24-72 ساعة',
+        copied: 'تم النسخ!',
+        priceMsg: 'السعر الحالي لـ SRMD يتم تحديثه تلقائياً من قاعدة البيانات'
+    },
     en: {
-        switcher: 'عربي',
-        loginTitle: 'Investor Login',
-        sendOtp: 'Send Code',
-        verifyOtp: 'Verify',
-        depositTitle: 'Deposit Address (USDT-TRC20)',
-        copyHint: '💡Tap address to copy',
-        balanceLabel: 'Your SRMD Balance',
-        usdLabel: 'Total Value:',
-        buyTitle: 'Purchase Request',
+        switcher: 'العربية',
+        loginTitle: 'Login',
+        sendOtp: 'Send OTP',
+        verifyOtp: 'Verify Code',
+        depositTitle: 'Deposit USDT',
+        copyHint: '⬇️ Copy address and send USDT (TRC20) only',
+        balanceLabel: 'My SRMD Balance',
+        usdLabel: '≈ $',
+        buyTitle: 'Submit Purchase Request',
         submitBtn: 'Submit Request',
         historyTitle: 'Transaction History',
-        refresh: 'Refresh',
+        refresh: '🔄 Refresh',
         logout: 'Logout',
-        totalCoins: 'Total Sold SRMD',
-        totalInvestors: 'Active Investors',
-        priceMsg: 'This price is subject to increase as the launch date approaches.',
-        txidHint: '⚠️Make sure to send USDT to the address above before submitting',
-        pending: 'Pending',
+        totalCoins: 'Total SRMD Coins',
+        totalInvestors: 'Total Investors',
+        txidHint: 'Enter Transaction ID (TXID) - Must be exactly 64 characters',
+        pending: 'Under Review',
         approved: 'Approved',
         rejected: 'Rejected',
         invalid_txid: 'Invalid TXID',
-        used_txid: 'Already Used',
-        amount_mismatch: 'Amount Error',
-        wrong_network: 'Wrong Network',
-        copied: '✅Copied to clipboard!',
-        enterPhone: 'Please enter your phone number',
-        enterOtp: 'Please enter OTP code',
-        txidUsed: '❌This TXID has already been used!',
-        txidSuccess: '✅Request submitted successfully!',
-        txidInvalid: '❌Please enter a valid 64-character TXID',
+        already_used: 'This TXID was already used',
+        no_transaction: 'Transaction not found',
         noHistory: 'No transactions yet',
-        noHistoryDesc: 'Your purchase requests will appear here'
-    },
-    ar: {
-        switcher: 'EN',
-        loginTitle: 'تسجيل دخول المستثمر',
-        sendOtp: 'إرسال الرمز',
-        verifyOtp: 'تأكيد',
-        depositTitle: 'عنوان الإيداع (USDT-TRC20)',
-        copyHint: '💡اضغط على العنوان للنسخ',
-        balanceLabel: 'رصيدك من SRMD',
-        usdLabel: 'القيمة الإجمالية:',
-        buyTitle: 'طلب شراء',
-        submitBtn: 'إرسال الطلب',
-        historyTitle: 'سجل المعاملات',
-        refresh: 'تحديث',
-        logout: 'خروج',
-        totalCoins: 'إجمالي العملات المباعة',
-        totalInvestors: 'المستثمرون النشطون',
-        priceMsg: 'هذا السعر قابل للزيادة مع اقتراب موعد الإطلاق.',
-        txidHint: '⚠️تأكد من إرسال USDT للعنوان أعلاه قبل الإرسال',
-        pending: 'قيد الانتظار',
-        approved: 'تمت الموافقة',
-        rejected: 'مرفوض',
-        invalid_txid: 'رقم غير صحيح',
-        used_txid: 'مستخدم مسبقاً',
-        amount_mismatch: 'خطأ في المبلغ',
-        wrong_network: 'شبكة خاطئة',
-        copied: '✅تم النسخ!',
-        enterPhone: 'الرجاء إدخال رقم الهاتف',
-        enterOtp: 'الرجاء إدخال رمز التحقق',
-        txidUsed: '❌هذا الرقم مستخدم مسبقاً!',
-        txidSuccess: '✅تم إرسال الطلب بنجاح!',
-        txidInvalid: '❌الرجاء إدخال رقم صحيح من 64 حرف',
-        noHistory: 'لا توجد معاملات بعد',
-        noHistoryDesc: 'ستظهر طلبات الشراء الخاصة بك هنا'
+        noHistoryDesc: 'Send USDT and enter TXID to start investing',
+        enterPhone: 'Please enter a valid phone number',
+        enterOtp: 'Please enter verification code',
+        txidInvalid: 'Transaction ID must be exactly 64 characters',
+        txidUsed: 'This TXID has already been used',
+        txidSuccess: 'Request submitted successfully! Will be reviewed within 24-72 hours',
+        copied: 'Copied!',
+        priceMsg: 'Current SRMD price is updated automatically from database'
     }
 };
 
-// Functions
-function toggleAgreementLang() {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
-    const data = agreementData[currentLang];
-    
-    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-    
-    document.getElementById('agreeSubtitle').textContent = data.subtitle;
-    document.getElementById('termsTitle').textContent = data.termsTitle;
-    document.getElementById('riskTitle').textContent = data.riskTitle;
-    document.getElementById('riskText').textContent = data.riskText;
-    document.getElementById('agreeText').innerHTML = data.agreeText;
-    document.getElementById('continueBtn').textContent = data.button;
-    document.getElementById('footerNote').textContent = data.footer;
-    document.querySelector('.lang-switch').textContent = data.langBtn;
-    
-    const list = document.getElementById('termsList');
-    list.innerHTML = '';
-    data.terms.forEach(term => {
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${term.title}</strong>${term.text}`;
-        list.appendChild(li);
-    });
-}
+document.getElementById('agreeCheckbox').addEventListener('change', function() {
+    document.getElementById('proceedBtn').disabled = !this.checked;
+});
 
-function checkAgreement() {
-    const checked = document.getElementById('agreeCheck').checked;
-    document.getElementById('continueBtn').disabled = !checked;
-}
-
-function acceptAgreement() {
-    agreementAccepted = true;
-    localStorage.setItem('sarmad_agreement_accepted', 'true');
-    localStorage.setItem('sarmad_agreement_date', new Date().toISOString());
-    
-    document.getElementById('agreementPage').style.display = 'none';
-    document.getElementById('walletApp').style.display = 'block';
-    document.getElementById('walletApp').classList.remove('wallet-app');
-    
-    initWallet();
-}
-
-// Check Agreement on Load
-window.onload = function() {
-    if (localStorage.getItem('sarmad_agreement_accepted') === 'true') {
+window.proceedToApp = function() {
+    const agreed = document.getElementById('agreeCheckbox').checked;
+    if (agreed) {
         document.getElementById('agreementPage').style.display = 'none';
         document.getElementById('walletApp').style.display = 'block';
         document.getElementById('walletApp').classList.remove('wallet-app');
