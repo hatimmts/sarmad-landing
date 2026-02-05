@@ -636,6 +636,154 @@ td {
         .next-btn { right: 5px; }
     }
 </style>
+<div class="sarmad-carousel-section">
+    
+    <div class="carousel-container">
+        <button class="nav-btn prev-btn" id="prevBtn">&#10094;</button>
+        
+        <div class="carousel-slide">
+            <img src="protocol-tenure-rewards.png" alt="Tenure Rewards" class="carousel-img" id="lastClone">
+            
+            <img src="ai-managed-gateway-core.png" alt="AI Gateway" class="carousel-img">
+            <img src="quantum-fortress-security.png" alt="Quantum Security" class="carousel-img">
+            <img src="proof-of-utility-vs-waste.png" alt="Proof of Utility" class="carousel-img">
+            <img src="frictionless-financial-freedom.png" alt="Financial Freedom" class="carousel-img">
+            <img src="protocol-tenure-rewards.png" alt="Tenure Rewards" class="carousel-img">
+            
+            <img src="ai-managed-gateway-core.png" alt="AI Gateway" class="carousel-img" id="firstClone">
+        </div>
+
+        <button class="nav-btn next-btn" id="nextBtn">&#10095;</button>
+    </div>
+
+</div>
+
+<div id="sarmadLightbox" class="lightbox-overlay">
+    <span class="close-btn">&times;</span>
+    <img class="lightbox-content" id="lightboxImg">
+</div>
+
+<style>
+    /* 1. تنسيق القسم الخارجي */
+    .sarmad-carousel-section {
+        background-color: #000000;
+        width: 100%;
+        padding: 50px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    /* 2. حاوية السلايدر */
+    .carousel-container {
+        width: 1000px; /* العرض الأقصى */
+        max-width: 90%;
+        height: auto;
+        position: relative;
+        border: 2px solid #D4AF37; /* الإطار الذهبي */
+        border-radius: 15px;
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        overflow: hidden; /* إخفاء الصور الجانبية */
+        background: #000;
+    }
+
+    /* الشريط الذي يحمل الصور */
+    .carousel-slide {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* تنسيق الصور داخل السلايدر */
+    .carousel-img {
+        width: 100%; /* تأخذ عرض الحاوية بالكامل */
+        min-width: 100%;
+        height: auto;
+        display: block;
+        cursor: pointer; /* شكل اليد */
+        transition: opacity 0.3s;
+    }
+
+    .carousel-img:hover {
+        opacity: 0.9;
+    }
+
+    /* 3. أزرار التنقل (الأسهم) */
+    .nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #D4AF37; /* لون ذهبي */
+        border: 1px solid #D4AF37;
+        font-size: 24px;
+        padding: 10px 15px;
+        cursor: pointer;
+        z-index: 10;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .nav-btn:hover {
+        background-color: #D4AF37;
+        color: #000;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+    }
+
+    .prev-btn { left: 15px; }
+    .next-btn { right: 15px; }
+
+    /* 4. تنسيق نافذة التكبير (Lightbox) */
+    .lightbox-overlay {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+    }
+
+    .lightbox-content {
+        max-width: 95%;
+        max-height: 90%;
+        border: 2px solid #D4AF37;
+        border-radius: 8px;
+        box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+        animation: zoomIn 0.3s;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #D4AF37;
+        font-size: 50px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+    }
+
+    .close-btn:hover { color: #fff; }
+
+    @keyframes zoomIn {
+        from {transform: scale(0.8); opacity: 0;}
+        to {transform: scale(1); opacity: 1;}
+    }
+
+    /* للجوال */
+    @media (max-width: 768px) {
+        .nav-btn { padding: 8px 12px; font-size: 18px; }
+        .prev-btn { left: 5px; }
+        .next-btn { right: 5px; }
+    }
+</style>
 
 <script>
     // --- كود السلايدر واللايت بوكس ---
@@ -652,13 +800,15 @@ td {
         // حجم الصورة (يتم تحديثه تلقائياً)
         let size = carouselImages[0].clientWidth;
 
-        // البداية من الصورة الأولى الحقيقية (لأننا أضفنا صور وهمية للبداية والنهاية)
+        // البداية من الصورة الأولى الحقيقية
         carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
 
         // تحديث الحجم عند تغيير حجم النافذة
         window.addEventListener('resize', () => {
-            size = carouselImages[0].clientWidth;
-            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            if(carouselImages[0]) {
+                size = carouselImages[0].clientWidth;
+                carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            }
         });
 
         // دالة الحركة لليمين
@@ -680,7 +830,7 @@ td {
         // ربط الأزرار
         nextBtn.addEventListener('click', () => {
             slideNext();
-            resetTimer(); // إعادة ضبط المؤقت عند الضغط اليدوي
+            resetTimer(); 
         });
 
         prevBtn.addEventListener('click', () => {
@@ -688,7 +838,7 @@ td {
             resetTimer();
         });
 
-        // التعامل مع الانتقال اللانهائي (Infinite Loop)
+        // التعامل مع الانتقال اللانهائي
         carouselSlide.addEventListener('transitionend', () => {
             if (carouselImages[counter].id === 'lastClone') {
                 carouselSlide.style.transition = "none";
@@ -702,11 +852,11 @@ td {
             }
         });
 
-        // --- التشغيل التلقائي (Auto Play) ---
+        // --- التشغيل التلقائي ---
         let slideInterval;
         
         const startSlideShow = () => {
-            slideInterval = setInterval(slideNext, 5000); // 5000 ميلي ثانية = 5 ثواني
+            slideInterval = setInterval(slideNext, 5000); 
         };
 
         const stopSlideShow = () => {
@@ -721,9 +871,12 @@ td {
         // بدء العرض
         startSlideShow();
 
-        // إيقاف العرض عند وضع الماوس فوق السلايدر
-        document.querySelector('.carousel-container').addEventListener('mouseenter', stopSlideShow);
-        document.querySelector('.carousel-container').addEventListener('mouseleave', startSlideShow);
+        // إيقاف العرض عند وضع الماوس
+        const container = document.querySelector('.carousel-container');
+        if(container){
+            container.addEventListener('mouseenter', stopSlideShow);
+            container.addEventListener('mouseleave', startSlideShow);
+        }
 
         // --- كود التكبير (Lightbox) ---
         const lightbox = document.getElementById('sarmadLightbox');
@@ -732,16 +885,15 @@ td {
 
         carouselImages.forEach(img => {
             img.addEventListener('click', function() {
-                // إذا كانت الصورة وهمية (Clone) لا تفتحها لتجنب المشاكل، أو افتحها بحذر
                 lightbox.style.display = "flex";
                 lightboxImg.src = this.src;
-                stopSlideShow(); // إيقاف السلايدر أثناء التكبير
+                stopSlideShow(); 
             });
         });
 
         closeBoxBtn.addEventListener('click', () => {
             lightbox.style.display = "none";
-            startSlideShow(); // إعادة التشغيل
+            startSlideShow(); 
         });
 
         lightbox.addEventListener('click', (e) => {
@@ -752,6 +904,7 @@ td {
         });
     });
 </script>
+
 
 <body id="body-tag">
 
