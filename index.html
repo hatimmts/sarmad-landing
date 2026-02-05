@@ -33,6 +33,114 @@ body {
     overflow-x: hidden;
 }
 
+/* --- Styles for Sarmad Carousel (Slider) --- */
+.sarmad-carousel-section {
+    background-color: #000000;
+    width: 100%;
+    padding: 20px 0 40px 0; /* تم تقليل المسافة العلوية */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.carousel-container {
+    width: 800px; /* العرض */
+    max-width: 90%;
+    position: relative;
+    border: 2px solid #D4AF37;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+    overflow: hidden;
+    background: #000;
+    direction: ltr; /* مهم جداً: إجبار الاتجاه لليسار لليمين لضمان عمل السلايدر */
+}
+
+.carousel-slide {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-img {
+    width: 100%;
+    min-width: 100%; /* تملأ الحاوية بالكامل */
+    height: auto;
+    display: block;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+/* Navigation Buttons */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #D4AF37;
+    border: 1px solid #D4AF37;
+    font-size: 20px;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    outline: none;
+    user-select: none;
+}
+
+.nav-btn:hover {
+    background-color: #D4AF37;
+    color: #000;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+}
+
+.prev-btn { left: 15px; }
+.next-btn { right: 15px; }
+
+/* Lightbox Styles */
+.lightbox-overlay {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.lightbox-content {
+    max-width: 95%;
+    max-height: 90%;
+    border: 2px solid #D4AF37;
+    border-radius: 8px;
+    box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+    animation: zoomIn 0.3s;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #D4AF37;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10000;
+    line-height: 1;
+}
+
+.close-btn:hover { color: #fff; }
+
+@keyframes zoomIn {
+    from {transform: scale(0.8); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+
 /* Agreement Page Styles */
 .agreement-page {
     min-height: 100vh;
@@ -46,7 +154,7 @@ body {
 
 .agreement-header {
     text-align: center;
-    padding: 40px 20px;
+    padding: 20px 20px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 30px;
 }
@@ -214,7 +322,7 @@ body {
     margin-top: 20px;
 }
 
-/* Wallet App Styles (Original) */
+/* Wallet App Styles */
 .wallet-app {
     display: none;
 }
@@ -275,10 +383,6 @@ header {
     border-color: var(--grey);
     cursor: not-allowed;
     opacity: 0.6;
-}
-
-.clickable:active {
-    transform: scale(0.95);
 }
 
 .container {
@@ -403,20 +507,9 @@ td {
     text-align: center;
 }
 
-.st-pending {
-    color: var(--orange);
-    font-weight: bold;
-}
-
-.st-approved {
-    color: var(--green);
-    font-weight: bold;
-}
-
-.st-rejected {
-    color: var(--red);
-    font-weight: bold;
-}
+.st-pending { color: var(--orange); font-weight: bold; }
+.st-approved { color: var(--green); font-weight: bold; }
+.st-rejected { color: var(--red); font-weight: bold; }
 
 .reason-text {
     font-size: 0.7rem;
@@ -439,13 +532,8 @@ td {
     margin-bottom: 10px;
 }
 
-.char-counter.valid {
-    color: var(--green);
-}
-
-.char-counter.invalid {
-    color: var(--red);
-}
+.char-counter.valid { color: var(--green); }
+.char-counter.invalid { color: var(--red); }
 
 .empty-state {
     color: var(--grey);
@@ -454,13 +542,9 @@ td {
     font-size: 0.9rem;
 }
 
-.hidden {
-    display: none !important;
-}
+.hidden { display: none !important; }
 
-.ar-mode {
-    font-family: 'Tajawal', sans-serif;
-}
+.ar-mode { font-family: 'Tajawal', sans-serif; }
 
 [dir="ltr"] .terms-list li {
     padding-right: 0;
@@ -473,445 +557,46 @@ td {
 }
 
 @media (max-width: 600px) {
-    .content-card, .agree-section {
-        padding: 20px;
-    }
-    .agreement-logo {
-        font-size: 1.5rem;
-    }
-    .lang-switch {
-        top: 10px;
-        left: 10px;
-        padding: 6px 12px;
-        font-size: 0.8rem;
-    }
+    .content-card, .agree-section { padding: 20px; }
+    .agreement-logo { font-size: 1.5rem; }
+    .lang-switch { top: 10px; left: 10px; padding: 6px 12px; font-size: 0.8rem; }
+    .carousel-container { width: 100%; border-radius: 0; border-left: none; border-right: none; }
+    .sarmad-carousel-section { padding-top: 10px; padding-bottom: 20px; }
 }
 </style>
 </head>
 
-    
-    <div class="sarmad-carousel-section">
-    
-    <div class="carousel-container">
-        <button class="nav-btn prev-btn" id="prevBtn">&#10094;</button>
-        
-        <div class="carousel-slide">
-            <img src="ai-managed-gateway-core.jpg" alt="AI Gateway" class="carousel-img" id="lastClone">
-            <img src="ai-managed-gateway-core.jpg" alt="AI Gateway" class="carousel-img">
-            <img src="quantum-fortress-security.jpg" alt="Quantum Security" class="carousel-img">
-            <img src="proof-of-utility-vs-waste.jpg" alt="Proof of Utility" class="carousel-img">
-            <img src="frictionless-financial-freedom.jpg" alt="Financial Freedom" class="carousel-img">
-            <img src="protocol-tenure-rewards.jpg" alt="Tenure Rewards" class="carousel-img">
-            <img src="ai-managed-gateway-core.jpg" alt="AI Gateway" class="carousel-img" id="firstClone">
-        </div>
-
-        <button class="nav-btn next-btn" id="nextBtn">&#10095;</button>
-    </div>
-
-</div>
-
-<div id="sarmadLightbox" class="lightbox-overlay">
-    <span class="close-btn">&times;</span>
-    <img class="lightbox-content" id="lightboxImg">
-</div>
-
-<style>
-    /* 1. تنسيق القسم الخارجي */
-    .sarmad-carousel-section {
-        background-color: #000000;
-        width: 100%;
-        padding: 50px 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
-
-    /* 2. حاوية السلايدر */
-    .carousel-container {
-        width: 1000px; /* العرض الأقصى */
-        max-width: 90%;
-        height: auto;
-        position: relative;
-        border: 2px solid #D4AF37; /* الإطار الذهبي */
-        border-radius: 15px;
-        box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
-        overflow: hidden; /* إخفاء الصور الجانبية */
-        background: #000;
-    }
-
-    /* الشريط الذي يحمل الصور */
-    .carousel-slide {
-        display: flex;
-        width: 100%;
-        height: 100%;
-    }
-
-    /* تنسيق الصور داخل السلايدر */
-    .carousel-img {
-        width: 100%; /* تأخذ عرض الحاوية بالكامل */
-        min-width: 100%;
-        height: auto;
-        display: block;
-        cursor: pointer; /* شكل اليد */
-        transition: opacity 0.3s;
-    }
-
-    .carousel-img:hover {
-        opacity: 0.9;
-    }
-
-    /* 3. أزرار التنقل (الأسهم) */
-    .nav-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: #D4AF37; /* لون ذهبي */
-        border: 1px solid #D4AF37;
-        font-size: 24px;
-        padding: 10px 15px;
-        cursor: pointer;
-        z-index: 10;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-        outline: none;
-    }
-
-    .nav-btn:hover {
-        background-color: #D4AF37;
-        color: #000;
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
-    }
-
-    .prev-btn { left: 15px; }
-    .next-btn { right: 15px; }
-
-    /* 4. تنسيق نافذة التكبير (Lightbox) - نفس السابق */
-    .lightbox-overlay {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.95);
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(5px);
-    }
-
-    .lightbox-content {
-        max-width: 95%;
-        max-height: 90%;
-        border: 2px solid #D4AF37;
-        border-radius: 8px;
-        box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
-        animation: zoomIn 0.3s;
-    }
-
-    .close-btn {
-        position: absolute;
-        top: 20px;
-        right: 35px;
-        color: #D4AF37;
-        font-size: 50px;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 10000;
-    }
-
-    .close-btn:hover { color: #fff; }
-
-    @keyframes zoomIn {
-        from {transform: scale(0.8); opacity: 0;}
-        to {transform: scale(1); opacity: 1;}
-    }
-
-    /* للجوال */
-    @media (max-width: 768px) {
-        .nav-btn { padding: 8px 12px; font-size: 18px; }
-        .prev-btn { left: 5px; }
-        .next-btn { right: 5px; }
-    }
-</style>
-<div class="sarmad-carousel-section">
-    
-    <div class="carousel-container">
-        <button class="nav-btn prev-btn" id="prevBtn">&#10094;</button>
-        
-        <div class="carousel-slide">
-            <img src="protocol-tenure-rewards.png" alt="Tenure Rewards" class="carousel-img" id="lastClone">
-            
-            <img src="ai-managed-gateway-core.png" alt="AI Gateway" class="carousel-img">
-            <img src="quantum-fortress-security.png" alt="Quantum Security" class="carousel-img">
-            <img src="proof-of-utility-vs-waste.png" alt="Proof of Utility" class="carousel-img">
-            <img src="frictionless-financial-freedom.png" alt="Financial Freedom" class="carousel-img">
-            <img src="protocol-tenure-rewards.png" alt="Tenure Rewards" class="carousel-img">
-            
-            <img src="ai-managed-gateway-core.png" alt="AI Gateway" class="carousel-img" id="firstClone">
-        </div>
-
-        <button class="nav-btn next-btn" id="nextBtn">&#10095;</button>
-    </div>
-
-</div>
-
-<div id="sarmadLightbox" class="lightbox-overlay">
-    <span class="close-btn">&times;</span>
-    <img class="lightbox-content" id="lightboxImg">
-</div>
-
-<style>
-    /* 1. تنسيق القسم الخارجي */
-    .sarmad-carousel-section {
-        background-color: #000000;
-        width: 100%;
-        padding: 50px 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
-
-    /* 2. حاوية السلايدر */
-    .carousel-container {
-        width: 1000px; /* العرض الأقصى */
-        max-width: 90%;
-        height: auto;
-        position: relative;
-        border: 2px solid #D4AF37; /* الإطار الذهبي */
-        border-radius: 15px;
-        box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
-        overflow: hidden; /* إخفاء الصور الجانبية */
-        background: #000;
-    }
-
-    /* الشريط الذي يحمل الصور */
-    .carousel-slide {
-        display: flex;
-        width: 100%;
-        height: 100%;
-    }
-
-    /* تنسيق الصور داخل السلايدر */
-    .carousel-img {
-        width: 100%; /* تأخذ عرض الحاوية بالكامل */
-        min-width: 100%;
-        height: auto;
-        display: block;
-        cursor: pointer; /* شكل اليد */
-        transition: opacity 0.3s;
-    }
-
-    .carousel-img:hover {
-        opacity: 0.9;
-    }
-
-    /* 3. أزرار التنقل (الأسهم) */
-    .nav-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: #D4AF37; /* لون ذهبي */
-        border: 1px solid #D4AF37;
-        font-size: 24px;
-        padding: 10px 15px;
-        cursor: pointer;
-        z-index: 10;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-        outline: none;
-    }
-
-    .nav-btn:hover {
-        background-color: #D4AF37;
-        color: #000;
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
-    }
-
-    .prev-btn { left: 15px; }
-    .next-btn { right: 15px; }
-
-    /* 4. تنسيق نافذة التكبير (Lightbox) */
-    .lightbox-overlay {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.95);
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(5px);
-    }
-
-    .lightbox-content {
-        max-width: 95%;
-        max-height: 90%;
-        border: 2px solid #D4AF37;
-        border-radius: 8px;
-        box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
-        animation: zoomIn 0.3s;
-    }
-
-    .close-btn {
-        position: absolute;
-        top: 20px;
-        right: 35px;
-        color: #D4AF37;
-        font-size: 50px;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 10000;
-    }
-
-    .close-btn:hover { color: #fff; }
-
-    @keyframes zoomIn {
-        from {transform: scale(0.8); opacity: 0;}
-        to {transform: scale(1); opacity: 1;}
-    }
-
-    /* للجوال */
-    @media (max-width: 768px) {
-        .nav-btn { padding: 8px 12px; font-size: 18px; }
-        .prev-btn { left: 5px; }
-        .next-btn { right: 5px; }
-    }
-</style>
-
-<script>
-    // --- كود السلايدر واللايت بوكس ---
-    document.addEventListener('DOMContentLoaded', () => {
-        const carouselSlide = document.querySelector('.carousel-slide');
-        const carouselImages = document.querySelectorAll('.carousel-slide img');
-        
-        // الأزرار
-        const prevBtn = document.querySelector('#prevBtn');
-        const nextBtn = document.querySelector('#nextBtn');
-
-        // العداد
-        let counter = 1;
-        // حجم الصورة (يتم تحديثه تلقائياً)
-        let size = carouselImages[0].clientWidth;
-
-        // البداية من الصورة الأولى الحقيقية
-        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-
-        // تحديث الحجم عند تغيير حجم النافذة
-        window.addEventListener('resize', () => {
-            if(carouselImages[0]) {
-                size = carouselImages[0].clientWidth;
-                carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-            }
-        });
-
-        // دالة الحركة لليمين
-        const slideNext = () => {
-            if (counter >= carouselImages.length - 1) return;
-            carouselSlide.style.transition = "transform 0.6s ease-in-out";
-            counter++;
-            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-        };
-
-        // دالة الحركة لليسار
-        const slidePrev = () => {
-            if (counter <= 0) return;
-            carouselSlide.style.transition = "transform 0.6s ease-in-out";
-            counter--;
-            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-        };
-
-        // ربط الأزرار
-        nextBtn.addEventListener('click', () => {
-            slideNext();
-            resetTimer(); 
-        });
-
-        prevBtn.addEventListener('click', () => {
-            slidePrev();
-            resetTimer();
-        });
-
-        // التعامل مع الانتقال اللانهائي
-        carouselSlide.addEventListener('transitionend', () => {
-            if (carouselImages[counter].id === 'lastClone') {
-                carouselSlide.style.transition = "none";
-                counter = carouselImages.length - 2;
-                carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-            }
-            if (carouselImages[counter].id === 'firstClone') {
-                carouselSlide.style.transition = "none";
-                counter = carouselImages.length - counter;
-                carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
-            }
-        });
-
-        // --- التشغيل التلقائي ---
-        let slideInterval;
-        
-        const startSlideShow = () => {
-            slideInterval = setInterval(slideNext, 5000); 
-        };
-
-        const stopSlideShow = () => {
-            clearInterval(slideInterval);
-        };
-
-        const resetTimer = () => {
-            stopSlideShow();
-            startSlideShow();
-        };
-
-        // بدء العرض
-        startSlideShow();
-
-        // إيقاف العرض عند وضع الماوس
-        const container = document.querySelector('.carousel-container');
-        if(container){
-            container.addEventListener('mouseenter', stopSlideShow);
-            container.addEventListener('mouseleave', startSlideShow);
-        }
-
-        // --- كود التكبير (Lightbox) ---
-        const lightbox = document.getElementById('sarmadLightbox');
-        const lightboxImg = document.getElementById('lightboxImg');
-        const closeBoxBtn = document.querySelector('.close-btn');
-
-        carouselImages.forEach(img => {
-            img.addEventListener('click', function() {
-                lightbox.style.display = "flex";
-                lightboxImg.src = this.src;
-                stopSlideShow(); 
-            });
-        });
-
-        closeBoxBtn.addEventListener('click', () => {
-            lightbox.style.display = "none";
-            startSlideShow(); 
-        });
-
-        lightbox.addEventListener('click', (e) => {
-            if (e.target !== lightboxImg) {
-                lightbox.style.display = "none";
-                startSlideShow();
-            }
-        });
-    });
-</script>
-
-
 <body id="body-tag">
+
+<div id="sarmadLightbox" class="lightbox-overlay">
+    <span class="close-btn">&times;</span>
+    <img class="lightbox-content" id="lightboxImg">
+</div>
 
 <div id="agreementPage" class="agreement-page">
     <button class="lang-switch" onclick="toggleAgreementLang()">English</button>
     
     <div class="agreement-container">
+        
+        <div class="sarmad-carousel-section">
+            <div class="carousel-container">
+                <button class="nav-btn prev-btn" id="prevBtn">&#10094;</button>
+                
+                <div class="carousel-slide">
+                    <img src="protocol-tenure-rewards.png" alt="Tenure Rewards" class="carousel-img" id="lastClone">
+                    
+                    <img src="ai-managed-gateway-core.png" alt="AI Gateway" class="carousel-img">
+                    <img src="quantum-fortress-security.png" alt="Quantum Security" class="carousel-img">
+                    <img src="proof-of-utility-vs-waste.png" alt="Proof of Utility" class="carousel-img">
+                    <img src="frictionless-financial-freedom.png" alt="Financial Freedom" class="carousel-img">
+                    <img src="protocol-tenure-rewards.png" alt="Tenure Rewards" class="carousel-img">
+                    
+                    <img src="ai-managed-gateway-core.png" alt="AI Gateway" class="carousel-img" id="firstClone">
+                </div>
+
+                <button class="nav-btn next-btn" id="nextBtn">&#10095;</button>
+            </div>
+        </div>
         <div class="agreement-header">
             <div class="agreement-logo">SARMAD PROTOCOL</div>
             <div class="agreement-subtitle" id="agreeSubtitle">اتفاقية شراء عملات SRMD المستقبلية</div>
@@ -1078,12 +763,139 @@ td {
     </div>
 </div>
 
+<div style="text-align: center; color: #444; font-size: 0.7rem; margin-top: 30px; padding-bottom: 20px;">
+System Version: V1.1
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
-// Firebase Config
+// --- CAROUSEL LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Only run if carousel exists
+    const carouselSlide = document.querySelector('.carousel-slide');
+    if(!carouselSlide) return;
+
+    const carouselImages = document.querySelectorAll('.carousel-slide img');
+    const prevBtn = document.querySelector('#prevBtn');
+    const nextBtn = document.querySelector('#nextBtn');
+
+    let counter = 1;
+    let size = 0;
+    let slideInterval;
+
+    // Ensure images are loaded before calculating width
+    const firstImg = carouselImages[0];
+    if (firstImg.complete) {
+        initCarousel();
+    } else {
+        firstImg.onload = initCarousel;
+    }
+
+    function initCarousel() {
+        size = carouselImages[0].clientWidth;
+        // Move to first real image (skip clone)
+        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+        startSlideShow();
+    }
+
+    // Update size on resize
+    window.addEventListener('resize', () => {
+        if(carouselImages[0]) {
+            size = carouselImages[0].clientWidth;
+            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+        }
+    });
+
+    const slideNext = () => {
+        if (counter >= carouselImages.length - 1) return;
+        carouselSlide.style.transition = "transform 0.5s ease-in-out";
+        counter++;
+        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+    };
+
+    const slidePrev = () => {
+        if (counter <= 0) return;
+        carouselSlide.style.transition = "transform 0.5s ease-in-out";
+        counter--;
+        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+    };
+
+    // Button Listeners
+    nextBtn.addEventListener('click', () => {
+        slideNext();
+        resetTimer();
+    });
+
+    prevBtn.addEventListener('click', () => {
+        slidePrev();
+        resetTimer();
+    });
+
+    // Infinite Loop Logic (Transition End)
+    carouselSlide.addEventListener('transitionend', () => {
+        if (carouselImages[counter].id === 'lastClone') {
+            carouselSlide.style.transition = "none";
+            counter = carouselImages.length - 2;
+            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+        }
+        if (carouselImages[counter].id === 'firstClone') {
+            carouselSlide.style.transition = "none";
+            counter = carouselImages.length - counter;
+            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+        }
+    });
+
+    // Auto Play Logic
+    function startSlideShow() {
+        // Clear existing to avoid multiples
+        if(slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(slideNext, 3000); // 3 seconds
+    }
+
+    function stopSlideShow() {
+        clearInterval(slideInterval);
+    }
+
+    function resetTimer() {
+        stopSlideShow();
+        startSlideShow();
+    }
+
+    // Pause on hover
+    const container = document.querySelector('.carousel-container');
+    container.addEventListener('mouseenter', stopSlideShow);
+    container.addEventListener('mouseleave', startSlideShow);
+
+    // --- LIGHTBOX LOGIC ---
+    const lightbox = document.getElementById('sarmadLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const closeBoxBtn = document.querySelector('.close-btn');
+
+    carouselImages.forEach(img => {
+        img.addEventListener('click', function() {
+            lightbox.style.display = "flex";
+            lightboxImg.src = this.src;
+            stopSlideShow(); // Stop slider while zooming
+        });
+    });
+
+    closeBoxBtn.addEventListener('click', () => {
+        lightbox.style.display = "none";
+        startSlideShow();
+    });
+
+    lightbox.addEventListener('click', (e) => {
+        if (e.target !== lightboxImg) {
+            lightbox.style.display = "none";
+            startSlideShow();
+        }
+    });
+});
+
+// --- FIREBASE & WALLET LOGIC ---
 const firebaseConfig = {
     apiKey: "AIzaSyBVyEPs_xvz9Oryk-jpLev4ja7Sb1P6RaM",
     authDomain: "sarmad-web.firebaseapp.com",
@@ -1096,27 +908,26 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Global Variables
 let currentLang = 'en';
 let srmdPrice = 0;
 let confirmationResult = null;
 let agreementAccepted = false;
 
-// Agreement Data
+// Data Objects
 const agreementData = {
     ar: {
         subtitle: "اتفاقية شراء عملات SRMD المستقبلية",
         termsTitle: "📋 بنود الاتفاقية",
         terms: [
             { title: "طبيعة المشروع", text: "يُقر المستثمر بأن Sarmad Protocol هو مشروع ذكاء اصطناعي مبني على شبكة لامركزية خاصة. العملة (SRMD) هي أداة دفع لاشتراكات الاستخدام الثقيلة فقط، وليست ورقة مالية أو سهم ملكية." },
-            { title: "آلية الشراء والتوزيع", text: "يتم شراء عملات SRMD بسعر اليوم (0.10 USDT) وتوزيعها على المستثمر بشكل يومي متساوٍ لمدة 365 يوماً فور بدء إنتاج بلوكات الشبكة الرئيسية." },
+            { title: "آلية الشراء والتوزيع", text: "يتم شراء عملات SRMD بسعر ابتداءا من (0.05 USDT) وتوزيعها على المستثمر بشكل يومي متساوٍ على كل المستثمرين بإنتاج يومي مقداره 86400 سرمد تقريبا ولا يمكن زيادة الإنتاج في أي حال من الأحوال فور بدء انتاج بلوكات الشبكة الرئيسية وسيتم إغلاق باب الشراء هذا قبل الإطلاق بأيام." },
             { title: "السعر المستهدف", text: "يُعلم المستثمر بأن السعر المستهدف عند الإطلاق (0.50 USDT) هو تقدير تسويقي بحت وغير مضمون. السعر الفعلي يتحدد حصرياً حسب العرض والطلب في السوق الحر." },
             { title: "مخاطر الاستثمار الكاملة", text: "يقر المستثمر بأنه يفهم أن استثماره قد يؤدي إلى خسارة كلية للمبلغ المدفوع. لا توجد ضمانات للعائد أو رأس المال أو السيولة." },
             { title: "فشل المشروع", text: "في حال فشل إطلاق الشبكة أو عدم تحقيق الأهداف التقنية أو التجارية، لا يحق للمستثمر المطالبة بأي تعويض أو استرداد للأموال المدفوعة." },
             { title: "التأخير في الإطلاق", text: "قد يتأخر إطلاق الشبكة لأسباب تقنية أو تنظيمية دون إشعار مسبق، ولا يترتب على ذلك أي التزامات مالية على Sarmad Protocol." },
             { title: "استخدام العملة المحدود", text: "العملة مخصصة حصرياً لدفع اشتراكات استخدام الذكاء الاصطناعي للمهام الثقيلة. المحادثات النصية للحصول على المعلومات مجانية ولا تتطلب عملات." },
-            { title: "غياب الضمانات", text: "لا تتعهد Sarmad Protocol بإدراج العملة في أي منصة تداول. إمكانية بيع أو تحويل العملة مضمونة على موقع سرمد الرسمي فقط." },
-            { title: "المسؤولية القانونية والضريبية", text: "يتحمل المستثمر كامل المسؤولية عن الامتثال لقوانين بلده والتزاماته الضريبية. Sarmad Protocol غير مسؤولة عن أي عواقب قانونية أو ضريبية." },
+            { title: "غياب الضمانات", text: "لا تتعهد Sarmad Protocol بإدراج العملة في أي منصة تداول. إمكانية بيع أو تحويل العملة غير مضمونة وتعتمد على سوق داخلي حر." },
+            { title: "المسؤولية القانونية والضريبية", text: "يتحمل المستثمر كامل المسؤولية عن الامتثال لقوانين بلده و التزاماته الضريبية. Sarmad Protocol غير مسؤولة عن أي عواقب قانونية أو ضريبية." },
             { title: "التنازل النهائي عن الدعاوى", text: "بموجب هذه الاتفاقية، يتنازل المستثمر نهائياً عن أي حق في رفع دعاوى قضائية أو مطالبات ضد Sarmad Protocol أو فريقها بخصوص هذا الاستثمار." }
         ],
         riskTitle: "⚠️ تنبيه هام",
@@ -1131,13 +942,13 @@ const agreementData = {
         termsTitle: "📋 Terms of Agreement",
         terms: [
             { title: "Project Nature", text: "The Investor acknowledges that Sarmad Protocol is an AI project built on a private decentralized network. The token (SRMD) is a payment tool for heavy usage subscriptions only, not a security or equity share." },
-            { title: "Purchase & Distribution", text: "SRMD tokens are purchased at today's price that starts from (0.05 USDT) and distributed to the Investors equally daily by producing upto 86400 SRMD upon mainnet block production starts and this number cannot be exceeded." },
+            { title: "Purchase & Distribution", text: "SRMD tokens are purchased at starting price (0.05 USDT) and distributed to Investors equally daily (approx 86400 SRMD/day) upon mainnet launch. Production cannot be increased. Purchase closes days before launch." },
             { title: "Target Price", text: "The Investor is informed that the target launch price (0.50 USDT) is a pure marketing estimate and NOT guaranteed. Actual price is determined solely by free market supply and demand." },
             { title: "Full Investment Risks", text: "The Investor acknowledges understanding that the investment may result in total loss of paid amount. No guarantees for return, capital, or liquidity." },
             { title: "Project Failure", text: "In case of network launch failure or failure to achieve technical/commercial goals, the Investor has no right to claim compensation or refund of paid funds." },
             { title: "Launch Delay", text: "Network launch may be delayed for technical or regulatory reasons without prior notice, with no financial liability on Sarmad Protocol." },
             { title: "Limited Token Usage", text: "Token is exclusively for paying AI heavy usage subscriptions. Text conversations for information are free and require no tokens." },
-            { title: "No Guarantees", text: "Sarmad Protocol does not commit to listing token on any exchange. Ability to sell or transfer is guaranteed on Sarmadprotocol.com only." },
+            { title: "No Guarantees", text: "Sarmad Protocol does not commit to listing token on any exchange. Ability to sell or transfer is not guaranteed and depends on a free internal market." },
             { title: "Legal & Tax Liability", text: "The Investor bears full responsibility for compliance with country laws and tax obligations. Sarmad Protocol is not liable for any legal or tax consequences." },
             { title: "Final Waiver of Claims", text: "By this agreement, the Investor permanently waives any right to file lawsuits or claims against Sarmad Protocol or its team regarding this investment." }
         ],
@@ -1150,7 +961,6 @@ const agreementData = {
     }
 };
 
-// Language Data for Wallet
 const langData = {
     en: {
         switcher: 'عربي',
@@ -1222,7 +1032,7 @@ const langData = {
     }
 };
 
-// Agreement Functions
+// Functions
 function toggleAgreementLang() {
     currentLang = currentLang === 'ar' ? 'en' : 'ar';
     const data = agreementData[currentLang];
@@ -1261,11 +1071,10 @@ function acceptAgreement() {
     document.getElementById('walletApp').style.display = 'block';
     document.getElementById('walletApp').classList.remove('wallet-app');
     
-    // Initialize wallet
     initWallet();
 }
 
-// Check if agreement already accepted
+// Check Agreement on Load
 window.onload = function() {
     if (localStorage.getItem('sarmad_agreement_accepted') === 'true') {
         document.getElementById('agreementPage').style.display = 'none';
@@ -1276,14 +1085,12 @@ window.onload = function() {
 };
 
 function initWallet() {
-    // Auth state listener
     auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('auth-ui').classList.add('hidden');
             document.getElementById('main-ui').classList.remove('hidden');
             document.getElementById('header-user').innerText = user.phoneNumber || "User";
             
-            // Listen to price changes (With Safety Check)
             db.collection('settings').doc('prices').onSnapshot(snap => {
                 if (snap.exists) {
                     const data = snap.data();
@@ -1293,7 +1100,6 @@ function initWallet() {
                 }
             });
             
-            // Listen to global stats (With Safety Check)
             db.collection('investors').onSnapshot(snap => {
                 let totalCoins = 0;
                 document.getElementById('global-investors-count').innerText = snap.size;
@@ -1311,7 +1117,6 @@ function initWallet() {
     });
 }
 
-// Wallet Functions
 function startCooldown(id, text) {
     const b = document.getElementById(id);
     if (!b) return;
@@ -1477,7 +1282,6 @@ function loadInvestorData(isManual = false) {
             const table = document.getElementById('history-table');
             const emptyState = document.getElementById('empty-history');
             
-            // Clear current table
             body.innerHTML = '';
             
             if (requests.length === 0) {
@@ -1487,16 +1291,11 @@ function loadInvestorData(isManual = false) {
                 table.classList.remove('hidden');
                 emptyState.classList.add('hidden');
                 
-                // Build HTML string first for performance
                 let rowsHtml = '';
                 requests.slice().reverse().forEach(req => {
-                    // Safety check for properties
                     if (!req) return;
-                    
                     const statusText = langData[currentLang][req.status] || req.status;
                     const reasonText = req.reasonCode ? (langData[currentLang][req.reasonCode] || req.reasonCode) : "";
-                    
-                    // Safety check for TXID substring to prevent crashes
                     const txStr = req.txid || "UNKNOWN";
                     const txidPreview = txStr.length > 10 
                         ? txStr.substring(0, 8) + '...' + txStr.substring(txStr.length - 6) 
@@ -1530,12 +1329,10 @@ function loadInvestorData(isManual = false) {
 
 async function submitNewRequest() {
     const tx = document.getElementById('txid-input').value.trim();
-    
     if (tx.length !== 64) {
         alert(langData[currentLang].txidInvalid);
         return;
     }
-    
     startCooldown('t-submit-btn', langData[currentLang].submitBtn);
     
     try {
@@ -1546,12 +1343,10 @@ async function submitNewRequest() {
         }
         
         const batch = db.batch();
-        
         batch.set(db.collection('all_txids').doc(tx), {
             used_by: auth.currentUser.phoneNumber,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-        
         batch.set(
             db.collection('investors').doc(auth.currentUser.phoneNumber),
             {
@@ -1569,17 +1364,11 @@ async function submitNewRequest() {
         document.getElementById('txid-input').value = '';
         checkTxLength();
         loadInvestorData();
-        
     } catch (err) {
         alert('Error: ' + err.message);
         console.error(err);
     }
 }
 </script>
-
-    <div style="text-align: center; color: #444; font-size: 0.7rem; margin-top: 30px; padding-bottom: 20px;">
-    System Version: V1.0
-    </div>
-    
 </body>
 </html>
