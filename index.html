@@ -33,30 +33,94 @@ body {
     overflow-x: hidden;
 }
 
-/* --- Styles for Sarmad Carousel (Slider) - Enhanced --- */
+/* Agreement Page Styles */
+.agreement-page {
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.agreement-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.agreement-header {
+    text-align: center;
+    padding: 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+}
+
+.agreement-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+}
+
+.agreement-subtitle {
+    color: var(--grey);
+    font-size: 1rem;
+}
+
+.version-badge {
+    display: inline-block;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-top: 10px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.lang-switch {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    z-index: 100;
+    transition: all 0.3s;
+}
+
+.lang-switch:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+/* --- Enhanced Carousel Styles --- */
 .sarmad-carousel-section {
     background-color: #000000;
     width: 100%;
-    padding: 20px 0 40px 0;
+    padding: 30px 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: visible; /* تغيير من hidden إلى visible لإظهار الأسهم خارج الإطار */
+    margin-bottom: 30px;
 }
 
-/* حاوية خارجية للسلايدر والأسهم */
 .carousel-wrapper {
     position: relative;
-    width: 900px; /* عرض أكبر لاستيعاب الأسهم */
-    max-width: 95%;
+    width: 100%;
+    max-width: 900px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 20px;
+    padding: 0 70px;
 }
 
 .carousel-container {
-    width: 800px;
-    max-width: 100%;
+    width: 100%;
+    max-width: 700px;
     position: relative;
     border: 2px solid #D4AF37;
     border-radius: 15px;
@@ -64,14 +128,13 @@ body {
     overflow: hidden;
     background: #000;
     direction: ltr;
-    flex: 1;
 }
 
 .carousel-slide {
     display: flex;
     width: 100%;
     height: 100%;
-    transition: transform 0.5s ease-in-out; /* إضافة انتقال سلس */
+    transition: transform 0.5s ease-in-out;
 }
 
 .carousel-img {
@@ -83,15 +146,17 @@ body {
     object-fit: cover;
 }
 
-/* Navigation Buttons - خارج الصورة */
+/* Navigation Buttons - على الجانبين */
 .nav-btn {
-    position: static; /* تغيير من absolute إلى static */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     background-color: rgba(0, 0, 0, 0.8);
     color: #D4AF37;
     border: 2px solid #D4AF37;
-    font-size: 24px;
-    width: 50px;
-    height: 50px;
+    font-size: 28px;
+    width: 55px;
+    height: 55px;
     cursor: pointer;
     z-index: 10;
     border-radius: 50%;
@@ -101,22 +166,26 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
 }
 
 .nav-btn:hover {
     background-color: #D4AF37;
     color: #000;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.9);
-    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 1);
+    transform: translateY(-50%) scale(1.1);
 }
 
 .nav-btn:active {
-    transform: scale(0.95);
+    transform: translateY(-50%) scale(0.95);
 }
 
-.prev-btn { order: -1; } /* يظهر على اليسار */
-.next-btn { order: 1; } /* يظهر على اليمين */
+.prev-btn { 
+    left: 0;
+}
+
+.next-btn { 
+    right: 0;
+}
 
 /* مؤشرات السلايد */
 .carousel-indicators {
@@ -195,91 +264,38 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
     .carousel-wrapper {
-        flex-direction: column;
-        gap: 15px;
+        padding: 0 15px;
     }
     
     .nav-btn {
         width: 45px;
         height: 45px;
+        font-size: 22px;
+    }
+    
+    .prev-btn {
+        left: -5px;
+    }
+    
+    .next-btn {
+        right: -5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-btn {
+        width: 40px;
+        height: 40px;
         font-size: 20px;
     }
     
-    .carousel-wrapper {
-        width: 100%;
+    .prev-btn {
+        left: -10px;
     }
     
-    /* في الموبايل، نضع الأزرار أسفل السلايدر */
-    .prev-btn, .next-btn {
-        order: 2;
+    .next-btn {
+        right: -10px;
     }
-    
-    .carousel-container {
-        order: 1;
-    }
-}
-
-/* Agreement Page Styles */
-.agreement-page {
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.agreement-container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.agreement-header {
-    text-align: center;
-    padding: 20px 20px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 30px;
-}
-
-.agreement-logo {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    color: var(--gold);
-    margin-bottom: 10px;
-    letter-spacing: 3px;
-}
-
-.agreement-subtitle {
-    color: var(--grey);
-    font-size: 1rem;
-}
-
-.version-badge {
-    display: inline-block;
-    background: rgba(212, 175, 55, 0.1);
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    margin-top: 10px;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.lang-switch {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.85rem;
-    z-index: 100;
-    transition: all 0.3s;
-}
-
-.lang-switch:hover {
-    background: rgba(212, 175, 55, 0.1);
 }
 
 .content-card {
@@ -844,7 +860,7 @@ body {
             <div class="version-badge">v1.2</div>
         </div>
 
-        <!-- Carousel Section - Enhanced -->
+        <!-- Carousel Section - Moved Here -->
         <div class="sarmad-carousel-section">
             <div class="carousel-wrapper">
                 <!-- Previous Button -->
@@ -853,10 +869,11 @@ body {
                 <!-- Carousel Container -->
                 <div class="carousel-container">
                     <div class="carousel-slide" id="carouselSlide">
-                        <img src="https://i.postimg.cc/RVt4ZXBM/file.jpg" alt="AI-Managed Gateway Core" class="carousel-img" onclick="openLightbox(0)">
-                        <img src="https://i.postimg.cc/Y0dP5whj/file.jpg" alt="Core Network Hub" class="carousel-img" onclick="openLightbox(1)">
-                        <img src="https://i.postimg.cc/Wpd4hWTW/file.jpg" alt="SRMD Protocol" class="carousel-img" onclick="openLightbox(2)">
-                        <img src="https://i.postimg.cc/0j8FgZh6/file.jpg" alt="Project Overview" class="carousel-img" onclick="openLightbox(3)">
+                        <img src="https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/ai-managed-gateway-core.png" alt="AI-Managed Gateway Core" class="carousel-img" onclick="openLightbox(0)">
+                        <img src="https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/quantum-fortress-security.png" alt="Quantum Fortress Security" class="carousel-img" onclick="openLightbox(1)">
+                        <img src="https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/proof-of-utility-vs-waste.png" alt="Proof of Utility vs Waste" class="carousel-img" onclick="openLightbox(2)">
+                        <img src="https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/frictionless-financial-freedom.png" alt="Frictionless Financial Freedom" class="carousel-img" onclick="openLightbox(3)">
+                        <img src="https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/protocol-tenure-rewards.png" alt="Protocol Tenure Rewards" class="carousel-img" onclick="openLightbox(4)">
                     </div>
                     
                     <!-- Indicators -->
@@ -1061,9 +1078,8 @@ let currentSlideIndex = 0;
 const slides = document.querySelectorAll('.carousel-img');
 const totalSlides = slides.length;
 let autoSlideInterval;
-const SLIDE_INTERVAL = 4000; // 4 seconds
+const SLIDE_INTERVAL = 4000;
 
-// إنشاء المؤشرات
 function createIndicators() {
     const indicatorsContainer = document.getElementById('carouselIndicators');
     for (let i = 0; i < totalSlides; i++) {
@@ -1075,7 +1091,6 @@ function createIndicators() {
     }
 }
 
-// تحديث المؤشرات
 function updateIndicators() {
     const dots = document.querySelectorAll('.indicator-dot');
     dots.forEach((dot, index) => {
@@ -1083,14 +1098,12 @@ function updateIndicators() {
     });
 }
 
-// الانتقال إلى شريحة معينة
 function goToSlide(index) {
     currentSlideIndex = index;
     updateCarousel();
     resetAutoSlide();
 }
 
-// تحديث عرض السلايد
 function updateCarousel() {
     const slideContainer = document.getElementById('carouselSlide');
     const offset = -currentSlideIndex * 100;
@@ -1098,32 +1111,27 @@ function updateCarousel() {
     updateIndicators();
 }
 
-// الانتقال للشريحة التالية
 function nextSlide() {
     currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
     updateCarousel();
     resetAutoSlide();
 }
 
-// الانتقال للشريحة السابقة
 function prevSlide() {
     currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
     updateCarousel();
     resetAutoSlide();
 }
 
-// بدء التشغيل التلقائي
 function startAutoSlide() {
     autoSlideInterval = setInterval(nextSlide, SLIDE_INTERVAL);
 }
 
-// إيقاف وإعادة تشغيل التلقائي
 function resetAutoSlide() {
     clearInterval(autoSlideInterval);
     startAutoSlide();
 }
 
-// إيقاف التشغيل التلقائي عند التمرير
 const carouselContainer = document.querySelector('.carousel-container');
 carouselContainer.addEventListener('mouseenter', () => {
     clearInterval(autoSlideInterval);
@@ -1133,14 +1141,14 @@ carouselContainer.addEventListener('mouseleave', () => {
     startAutoSlide();
 });
 
-// Lightbox Functions
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
 const imageUrls = [
-    'https://i.postimg.cc/RVt4ZXBM/file.jpg',
-    'https://i.postimg.cc/Y0dP5whj/file.jpg',
-    'https://i.postimg.cc/Wpd4hWTW/file.jpg',
-    'https://i.postimg.cc/0j8FgZh6/file.jpg'
+    'https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/ai-managed-gateway-core.png',
+    'https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/quantum-fortress-security.png',
+    'https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/proof-of-utility-vs-waste.png',
+    'https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/frictionless-financial-freedom.png',
+    'https://raw.githubusercontent.com/Mustapha-Sarmad-Protocol/adprotocol.com/refs/heads/main/protocol-tenure-rewards.png'
 ];
 
 function openLightbox(index) {
@@ -1154,19 +1162,16 @@ function closeLightbox() {
     document.body.style.overflow = 'auto';
 }
 
-// إغلاق عند الضغط على ESC
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && lightbox.style.display === 'flex') {
         closeLightbox();
     }
 });
 
-// منع إغلاق عند الضغط على الصورة
 lightboxImg.addEventListener('click', (e) => {
     e.stopPropagation();
 });
 
-// تهيئة السلايدر عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', () => {
     createIndicators();
     updateCarousel();
