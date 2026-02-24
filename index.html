@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" id="htmlTag">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sarfees | Ride-Sharing Reinvented</title>
+<title>Sarfees</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@300;400;600;700&family=Tajawal:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Tajawal:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -15,56 +15,79 @@ body{
     margin:0;
     background:#000;
     color:#fff;
+    font-family:'Tajawal',sans-serif;
+    line-height:1.8;
+}
+
+body.en{
     font-family:'Inter',sans-serif;
 }
-body.ar{
-    font-family:'Tajawal',sans-serif;
+
+section{
+    padding:70px 20px;
+    max-width:1000px;
+    margin:auto;
 }
-.lang-btn,.support-btn{
+
+h1,h2{
+    font-family:'Orbitron',sans-serif;
+    text-align:center;
+    margin-bottom:30px;
+    letter-spacing:2px;
+}
+
+h1{font-size:3rem;}
+h2{font-size:2rem;margin-top:60px;}
+
+p{
+    font-size:1.1rem;
+    color:#ccc;
+    margin-bottom:18px;
+}
+
+.highlight{color:#fff;font-weight:700;}
+
+.button{
+    display:inline-block;
+    padding:16px 35px;
+    background:linear-gradient(145deg,#e6e6e6,#bfbfbf);
+    color:#000;
+    font-weight:700;
+    border-radius:8px;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.center{text-align:center;}
+
+.box{
+    border:1px solid #333;
+    padding:25px;
+    margin-top:30px;
+    border-radius:12px;
+}
+
+.top-buttons{
     position:fixed;
     top:20px;
-    padding:8px 18px;
-    border-radius:8px;
-    font-weight:700;
-    background:linear-gradient(145deg,#e6e6e6,#bfbfbf);
-    color:#000;
-    border:none;
-    cursor:pointer;
+    left:20px;
 }
-.lang-btn{right:20px;}
-.support-btn{left:20px;}
 
-.hero{
-    text-align:center;
-    padding:140px 20px;
-}
-.logo{
-    font-family:'Orbitron',sans-serif;
-    font-size:3rem;
-    margin-bottom:25px;
-    letter-spacing:4px;
-}
-.tagline{
-    font-size:1.2rem;
-    max-width:700px;
-    margin:20px auto 40px;
-    line-height:1.7;
-    color:#ccc;
-}
-.cta{
-    padding:18px 40px;
-    border-radius:10px;
-    font-weight:700;
-    font-size:1rem;
+.lang-btn, .support-btn{
+    margin:5px;
+    padding:8px 16px;
     background:linear-gradient(145deg,#e6e6e6,#bfbfbf);
     color:#000;
     border:none;
+    border-radius:6px;
     cursor:pointer;
+    font-weight:700;
 }
+
 .footer{
     text-align:center;
     padding:60px 20px;
-    border-top:1px solid #111;
+    border-top:1px solid #222;
     margin-top:80px;
     color:#aaa;
 }
@@ -79,6 +102,7 @@ body.ar{
     justify-content:center;
     align-items:center;
 }
+
 .modal-box{
     background:#111;
     padding:30px;
@@ -86,6 +110,7 @@ body.ar{
     max-width:400px;
     border-radius:12px;
 }
+
 .modal-box input,
 .modal-box textarea{
     width:100%;
@@ -96,6 +121,7 @@ body.ar{
     color:#fff;
     border-radius:6px;
 }
+
 .modal-box button{
     margin-top:15px;
     width:100%;
@@ -112,21 +138,36 @@ body.ar{
 
 <body>
 
+<div class="top-buttons">
+<button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
 <button class="support-btn" onclick="openSupport()">Support</button>
-<button class="lang-btn" onclick="toggleLang()" id="langBtn">AR</button>
+</div>
 
-<section class="hero">
-<div class="logo">SARFEES</div>
-<div class="tagline" id="taglineText"></div>
-<a href="https://t.me/SarfeesBot" target="_blank">
-<button class="cta" id="ctaText"></button>
-</a>
+<section class="center">
+<h1>SARFEES</h1>
+<p id="introText"></p>
+<a href="https://t.me/SarfeesBot" target="_blank" class="button" id="joinBtn"></a>
+</section>
+
+<section>
+<h2 id="section1Title"></h2>
+<div id="section1Text"></div>
+</section>
+
+<section>
+<h2 id="section2Title"></h2>
+<div id="section2Text"></div>
+</section>
+
+<section>
+<h2 id="section3Title"></h2>
+<div id="section3Text"></div>
 </section>
 
 <div class="footer">
-<div>SARMAD PROTOCOL</div>
-<div>Benefit for Everyone.</div>
-<div style="margin-top:10px;">Coming Strong Soon.</div>
+<p>SARMAD PROTOCOL</p>
+<p>Benefit for Everyone.</p>
+<p>Coming Strong Soon.</p>
 </div>
 
 <!-- Support Modal -->
@@ -150,7 +191,6 @@ const firebaseConfig = {
     messagingSenderId: "687271413195",
     appId: "1:687271413195:web:f9564027c56ed0efb7e24e"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -164,10 +204,7 @@ function closeSupport(){
 function sendSupport(){
     const name=document.getElementById("supportName").value || "Anonymous";
     const message=document.getElementById("supportMessage").value;
-    if(!message){
-        alert("Please write a message");
-        return;
-    }
+    if(!message){alert("Please write a message");return;}
     db.collection("support_messages").add({
         name:name,
         message:message,
@@ -180,31 +217,51 @@ function sendSupport(){
     });
 }
 
-// Language
+// Language System
+let currentLang="ar";
+
 const content={
-en:{
-tagline:"The first ride-sharing network that gives you a lifetime 20% reward — even if you never drive.",
-cta:"Launch Sarfees Bot"
-},
 ar:{
-tagline:"أول شبكة نقل تشاركي تمنحك عائد دائم 20٪ مدى الحياة حتى لو لم تعمل كسائق.",
-cta:"الدخول إلى بوت سرفيس"
+intro:"تنقل يومي أوفر. دخل إضافي حقيقي. نظام بسيط وواضح.",
+join:"الدخول إلى بوت سرفيس",
+s1:"اكسب 20٪ من نمو الشبكة",
+s1t:"عندما تدعو شخصاً للانضمام، تحصل على 20٪ من أي مبلغ يقوم بتحويله مقابل أيام الاستخدام.",
+s2:"لماذا سرفيس أوفر دائماً؟",
+s2t:"السعر يظهر لك قبل تأكيد الرحلة. لا عداد. لا مفاجآت.",
+s3:"لماذا سرفيس أفضل للكباتن؟",
+s3t:"لا عمولة. الأجرة كاملة لك. اشتراك شهري 5 دولارات فقط."
+},
+en:{
+intro:"Cheaper daily rides. Real extra income. Simple and clear system.",
+join:"Launch Sarfees Bot",
+s1:"Earn 20% From Network Growth",
+s1t:"When you invite someone, you earn 20% of any amount they convert for usage days.",
+s2:"Why Sarfees Is Always Cheaper",
+s2t:"Price is shown before confirmation. No meter. No surprises.",
+s3:"Why Sarfees Is Better For Captains",
+s3t:"No commission. Full fare is yours. Only $5 monthly subscription."
 }
 };
 
-let currentLang=navigator.language.startsWith("ar")?"ar":"en";
-
 function applyLang(){
-    document.body.classList.toggle("ar",currentLang==="ar");
-    document.getElementById("htmlTag").dir=currentLang==="ar"?"rtl":"ltr";
-    document.getElementById("langBtn").innerText=currentLang==="en"?"AR":"EN";
-    document.getElementById("taglineText").innerText=content[currentLang].tagline;
-    document.getElementById("ctaText").innerText=content[currentLang].cta;
+document.body.classList.toggle("en",currentLang==="en");
+document.getElementById("htmlTag").dir=currentLang==="ar"?"rtl":"ltr";
+document.getElementById("langBtn").innerText=currentLang==="ar"?"EN":"AR";
+document.getElementById("introText").innerText=content[currentLang].intro;
+document.getElementById("joinBtn").innerText=content[currentLang].join;
+document.getElementById("section1Title").innerText=content[currentLang].s1;
+document.getElementById("section1Text").innerText=content[currentLang].s1t;
+document.getElementById("section2Title").innerText=content[currentLang].s2;
+document.getElementById("section2Text").innerText=content[currentLang].s2t;
+document.getElementById("section3Title").innerText=content[currentLang].s3;
+document.getElementById("section3Text").innerText=content[currentLang].s3t;
 }
+
 function toggleLang(){
-    currentLang=currentLang==="en"?"ar":"en";
-    applyLang();
+currentLang=currentLang==="ar"?"en":"ar";
+applyLang();
 }
+
 applyLang();
 </script>
 
