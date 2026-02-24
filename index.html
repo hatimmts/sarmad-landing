@@ -1,110 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlTag">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sarfees | Smart Ride Matching Network</title>
+<title>Sarfees | Ride-Sharing Reinvented</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <style>
-:root{
-    --gold:#d4af37;
-    --bg:#0b0b0b;
-    --card:#121212;
-    --text:#ffffff;
-    --grey:#888;
-    --border:#222;
+:root{--gold:#d4af37;--bg:#070707;--card:#121212;--text:#ffffff;--grey:#888;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;}
+body.ar{font-family:'Tajawal',sans-serif;}
+section{padding:100px 20px;max-width:1200px;margin:auto;}
+.lang-switch,.support-btn{
+position:fixed;top:20px;padding:8px 16px;border-radius:6px;
+font-size:0.85rem;cursor:pointer;background:transparent;
+}
+.lang-switch{right:20px;border:1px solid var(--gold);color:var(--gold);}
+.support-btn{left:20px;border:1px solid #555;color:#aaa;}
+.hero{text-align:center;padding-top:140px;padding-bottom:120px;}
+.logo{font-family:'Orbitron';font-size:3rem;margin-bottom:25px;
+background:linear-gradient(90deg,#fff,#d4af37);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.tagline{font-size:1.2rem;color:#bbb;max-width:800px;margin:20px auto 40px;}
+.cta-btn{padding:18px 36px;background:linear-gradient(135deg,var(--gold),#b8941f);
+border:none;color:#000;font-weight:700;border-radius:8px;cursor:pointer;}
+.stats{display:flex;justify-content:center;gap:60px;margin-top:60px;}
+.stat-number{font-size:2rem;font-weight:700;color:var(--gold);}
+.footer{text-align:center;padding:60px;border-top:1px solid #111;margin-top:100px;}
+/* Support Modal */
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,0.8);justify-content:center;align-items:center;}
+.modal-content{background:#111;padding:30px;border-radius:12px;width:90%;max-width:400px;}
+.modal-content textarea,.modal-content input{
+width:100%;padding:12px;margin-top:10px;background:#000;border:1px solid #333;color:#fff;border-radius:6px;
+}
+.modal-content button{margin-top:15px;width:100%;padding:12px;background:var(--gold);
+border:none;color:#000;font-weight:bold;border-radius:6px;cursor:pointer;}
+</style>
+</head>
+
+<body>
+
+<button class="lang-switch" onclick="toggleLang()" id="langBtn">AR</button>
+<button class="support-btn" onclick="openSupport()">Support</button>
+
+<section class="hero">
+<div class="logo">SARFEES</div>
+<div class="tagline" id="taglineText"></div>
+<a href="https://t.me/SarfeesBot" target="_blank">
+<button class="cta-btn" id="ctaText"></button>
+</a>
+<div class="stats">
+<div><div class="stat-number" id="userCounter">500+</div></div>
+<div><div class="stat-number">20%</div></div>
+</div>
+</section>
+
+<div class="footer">
+<div class="footer-title">SARMAD PROTOCOL</div>
+<div>Benefit for Everyone.</div>
+<div style="color:var(--gold);margin-top:10px;">Coming Strong Soon.</div>
+</div>
+
+<!-- Support Modal -->
+<div class="modal" id="supportModal">
+<div class="modal-content">
+<h3>Support</h3>
+<input type="text" id="supportName" placeholder="Your name (optional)">
+<textarea id="supportMessage" rows="4" placeholder="Write your message..."></textarea>
+<button onclick="sendSupport()">Send Message</button>
+<button onclick="closeSupport()" style="background:#333;color:#aaa;margin-top:10px;">Cancel</button>
+</div>
+</div>
+
+<script>
+// Firebase Config (ضع بياناتك هنا)
+const firebaseConfig = {
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_DOMAIN",
+projectId: "YOUR_PROJECT_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Support
+function openSupport(){document.getElementById("supportModal").style.display="flex";}
+function closeSupport(){document.getElementById("supportModal").style.display="none";}
+
+function sendSupport(){
+let name=document.getElementById("supportName").value;
+let message=document.getElementById("supportMessage").value;
+if(!message){alert("Please write a message");return;}
+
+db.collection("support_messages").add({
+name:name||"Anonymous",
+message:message,
+timestamp:new Date(),
+source:"Sarfees"
+}).then(()=>{
+alert("Message sent successfully.");
+closeSupport();
+document.getElementById("supportMessage").value="";
+});
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+// Language Toggle
+const content={
+en:{tagline:"The first ride-sharing network that gives you a lifetime 20% reward — even if you never drive.",cta:"Launch Sarfees Bot"},
+ar:{tagline:"أول شبكة نقل تشاركي تمنحك عائد دائم 20٪ مدى الحياة حتى لو لم تعمل كسائق.",cta:"الدخول إلى بوت سرفيس"}
+};
+let currentLang=navigator.language.startsWith("ar")?"ar":"en";
+function applyLang(){
+document.body.classList.toggle("ar",currentLang==="ar");
+document.getElementById("htmlTag").dir=currentLang==="ar"?"rtl":"ltr";
+document.getElementById("langBtn").innerText=currentLang==="en"?"AR":"EN";
+document.getElementById("taglineText").innerText=content[currentLang].tagline;
+document.getElementById("ctaText").innerText=content[currentLang].cta;
 }
+function toggleLang(){currentLang=currentLang==="en"?"ar":"en";applyLang();}
+applyLang();
+</script>
 
-body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    overflow-x:hidden;
-}
-
-section{
-    padding:80px 20px;
-    max-width:1100px;
-    margin:auto;
-}
-
-/* HERO */
-
-.hero{
-    text-align:center;
-    padding-top:120px;
-    padding-bottom:120px;
-}
-
-.logo{
-    font-family:'Orbitron',sans-serif;
-    font-size:3rem;
-    letter-spacing:4px;
-    margin-bottom:25px;
-}
-
-.tagline{
-    font-size:1.25rem;
-    color:var(--grey);
-    max-width:750px;
-    margin:20px auto 40px auto;
-    line-height:1.6;
-}
-
-.cta-btn{
-    padding:18px 36px;
-    background:linear-gradient(135deg,var(--gold),#b8941f);
-    border:none;
-    color:#000;
-    font-weight:600;
-    border-radius:8px;
-    cursor:pointer;
-    transition:0.3s;
-    font-size:1rem;
-}
-
-.cta-btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 10px 25px rgba(212,175,55,0.4);
-}
-
-.bot-link{
-    margin-top:18px;
-    font-size:0.85rem;
-    color:#555;
-}
-
-/* FEATURES */
-
-.features{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:30px;
-    margin-top:40px;
-}
-
-.card{
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:30px;
-    border-radius:14px;
-    transition:0.3s;
-}
-
-.card:hover{
-    border-color:var(--gold);
-    transform:translateY(-5px);
-}
-
-.card h3{
+</body>
+</html>.card h3{
     margin-bottom:15px;
     color:var(--gold);
 }
