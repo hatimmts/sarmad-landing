@@ -81,11 +81,15 @@ border:none;color:#000;font-weight:bold;border-radius:6px;cursor:pointer;}
 <script>
 // Firebase Config (ضع بياناتك هنا)
 const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_DOMAIN",
-projectId: "YOUR_PROJECT_ID"
+    apiKey: "AIzaSyBVyEPs_xvz9Oryk-jpLev4ja7Sb1P6RaM",
+    authDomain: "sarmad-web.firebaseapp.com",
+    projectId: "sarmad-web",
+    storageBucket: "sarmad-web.firebasestorage.app",
+    messagingSenderId: "687271413195",
+    appId: "1:687271413195:web:f9564027c56ed0efb7e24e"
 };
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 const db = firebase.firestore();
 
 // Support
