@@ -3,267 +3,325 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sarfees</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Tajawal:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
+<title>Sarfees | سرفيس</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Tajawal:wght@300;400;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
 <style>
-body{
-    margin:0;
-    background:#000;
-    color:#fff;
-    font-family:'Tajawal',sans-serif;
-    line-height:1.8;
+:root{
+  --black:#000;--dark:#0a0a0a;--card:#111;
+  --border:#222;--border-bright:#3a3a3a;
+  --silver:#c8c8c8;--silver-light:#e8e8e8;--silver-dim:#888;--white:#fff;
 }
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Tajawal',sans-serif;line-height:1.9;overflow-x:hidden;}
+body.en{font-family:'Inter',sans-serif;}
 
-body.en{
-    font-family:'Inter',sans-serif;
-}
+/* noise */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4;}
 
-section{
-    padding:70px 20px;
-    max-width:1000px;
-    margin:auto;
-}
+/* nav */
+.top-bar{position:fixed;top:0;left:0;right:0;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:100;}
+.top-bar-logo{font-family:'Orbitron',sans-serif;font-size:1.05rem;letter-spacing:5px;color:var(--silver-light);}
+.top-bar-actions{display:flex;gap:10px;}
+.btn-sm{padding:8px 18px;background:linear-gradient(145deg,#e0e0e0,#b0b0b0);color:#000;border:none;border-radius:6px;font-weight:700;font-size:.82rem;cursor:pointer;letter-spacing:1px;transition:opacity .2s;}
+.btn-sm:hover{opacity:.8;}
 
-h1,h2{
-    font-family:'Orbitron',sans-serif;
-    text-align:center;
-    margin-bottom:30px;
-    letter-spacing:2px;
-}
+/* hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px;position:relative;}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(180,180,180,.06) 0%,transparent 70%);pointer-events:none;}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(3rem,10vw,6.5rem);font-weight:900;letter-spacing:8px;background:linear-gradient(180deg,#fff 0%,#666 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:14px;}
+.hero-tagline{font-size:.8rem;color:var(--silver-dim);letter-spacing:5px;text-transform:uppercase;margin-bottom:30px;font-weight:300;}
+.hero-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--silver),transparent);margin:0 auto 34px;}
+.hero-desc{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--silver);max-width:560px;margin:0 auto 42px;}
+.btn-primary{display:inline-block;padding:18px 50px;background:linear-gradient(145deg,#e8e8e8,#b8b8b8);color:#000;font-weight:800;font-size:1rem;border-radius:8px;text-decoration:none;letter-spacing:1px;transition:transform .2s,box-shadow .2s,opacity .2s;box-shadow:0 0 30px rgba(200,200,200,.1);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 55px rgba(200,200,200,.2);opacity:.9;}
 
-h1{font-size:3rem;}
-h2{font-size:2rem;margin-top:60px;}
+/* sections */
+.section{max-width:900px;margin:0 auto;padding:80px 24px;position:relative;z-index:1;}
+.section-line{width:100%;height:1px;background:linear-gradient(90deg,var(--border-bright),transparent);margin-bottom:50px;}
+.section-label{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--silver-dim);margin-bottom:14px;font-weight:600;}
+.section h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,4vw,2rem);letter-spacing:2px;margin-bottom:22px;background:linear-gradient(135deg,#fff 40%,#777);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.3;}
+.section p{color:var(--silver);font-size:1.05rem;margin-bottom:16px;}
 
-p{
-    font-size:1.1rem;
-    color:#ccc;
-    margin-bottom:18px;
-}
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:28px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px 22px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s;}
+.card:hover{border-color:var(--border-bright);transform:translateY(-4px);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,200,200,.2),transparent);}
+.card-icon{font-size:1.8rem;margin-bottom:12px;display:block;}
+.card h3{font-family:'Orbitron',sans-serif;font-size:.88rem;letter-spacing:1px;margin-bottom:8px;color:var(--silver-light);}
+.card p{font-size:.92rem;color:var(--silver-dim);margin:0;}
 
-.highlight{color:#fff;font-weight:700;}
+/* feature list */
+.feature-list{list-style:none;margin-top:22px;}
+.feature-list li{display:flex;align-items:flex-start;gap:14px;padding:15px 0;border-bottom:1px solid var(--border);color:var(--silver);font-size:1.02rem;}
+.feature-list li:last-child{border-bottom:none;}
+.feature-list .check{color:var(--silver-light);font-size:1.05rem;margin-top:2px;flex-shrink:0;}
 
-.button{
-    display:inline-block;
-    padding:16px 35px;
-    background:linear-gradient(145deg,#e6e6e6,#bfbfbf);
-    color:#000;
-    font-weight:700;
-    border-radius:8px;
-    text-decoration:none;
-    cursor:pointer;
-}
+/* example box */
+.example-box{background:var(--card);border:1px solid var(--border-bright);border-radius:14px;padding:28px 26px;margin-top:28px;position:relative;overflow:hidden;}
+.example-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,200,200,.25),transparent);}
+.ex-label{font-size:.7rem;letter-spacing:4px;text-transform:uppercase;color:var(--silver-dim);margin-bottom:16px;}
+.ex-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);font-size:1rem;color:var(--silver);}
+.ex-row:last-child{border-bottom:none;}
+.ex-val{color:var(--white);font-weight:700;font-family:'Orbitron',sans-serif;font-size:.9rem;}
 
-.center{text-align:center;}
+/* closing */
+.closing{text-align:center;padding:100px 24px;position:relative;z-index:1;border-top:1px solid var(--border);}
+.closing h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,5vw,2.8rem);letter-spacing:3px;margin-bottom:22px;background:linear-gradient(180deg,#fff,#666);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.closing p{color:var(--silver-dim);font-size:1.1rem;max-width:580px;margin:0 auto 10px;}
+.closing .btn-primary{margin-top:38px;}
 
-.box{
-    border:1px solid #333;
-    padding:25px;
-    margin-top:30px;
-    border-radius:12px;
-}
+/* footer */
+.footer{text-align:center;padding:36px 20px;border-top:1px solid var(--border);color:#444;font-size:.82rem;letter-spacing:3px;position:relative;z-index:1;}
 
-.top-buttons{
-    position:fixed;
-    top:20px;
-    left:20px;
-}
+/* modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);justify-content:center;align-items:center;z-index:200;backdrop-filter:blur(8px);}
+.modal-box{background:#0f0f0f;border:1px solid var(--border-bright);padding:36px 30px;width:90%;max-width:420px;border-radius:16px;position:relative;}
+.modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(200,200,200,.3),transparent);}
+.modal-box h3{font-family:'Orbitron',sans-serif;font-size:.95rem;letter-spacing:3px;margin-bottom:20px;color:var(--silver-light);}
+.modal-box input,.modal-box textarea{width:100%;margin-top:10px;padding:12px 14px;background:#000;border:1px solid var(--border-bright);color:var(--white);border-radius:8px;font-family:inherit;font-size:.95rem;outline:none;transition:border-color .2s;}
+.modal-box input:focus,.modal-box textarea:focus{border-color:#666;}
+.btn-send{margin-top:16px;width:100%;padding:14px;background:linear-gradient(145deg,#e0e0e0,#b0b0b0);color:#000;border:none;font-weight:800;font-size:.95rem;border-radius:8px;cursor:pointer;letter-spacing:1px;}
+.btn-cancel{margin-top:10px;width:100%;padding:12px;background:transparent;color:var(--silver-dim);border:1px solid var(--border);font-size:.9rem;border-radius:8px;cursor:pointer;font-family:inherit;}
 
-.lang-btn, .support-btn{
-    margin:5px;
-    padding:8px 16px;
-    background:linear-gradient(145deg,#e6e6e6,#bfbfbf);
-    color:#000;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:700;
-}
+/* fade */
+.fade-in{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
 
-.footer{
-    text-align:center;
-    padding:60px 20px;
-    border-top:1px solid #222;
-    margin-top:80px;
-    color:#aaa;
-}
-
-/* Support Modal */
-.modal{
-    display:none;
-    position:fixed;
-    top:0;left:0;
-    width:100%;height:100%;
-    background:rgba(0,0,0,0.85);
-    justify-content:center;
-    align-items:center;
-}
-
-.modal-box{
-    background:#111;
-    padding:30px;
-    width:90%;
-    max-width:400px;
-    border-radius:12px;
-}
-
-.modal-box input,
-.modal-box textarea{
-    width:100%;
-    margin-top:10px;
-    padding:12px;
-    background:#000;
-    border:1px solid #333;
-    color:#fff;
-    border-radius:6px;
-}
-
-.modal-box button{
-    margin-top:15px;
-    width:100%;
-    padding:12px;
-    background:linear-gradient(145deg,#e6e6e6,#bfbfbf);
-    color:#000;
-    border:none;
-    font-weight:700;
-    border-radius:6px;
-    cursor:pointer;
+@media(max-width:600px){
+  .top-bar-logo{font-size:.82rem;letter-spacing:3px;}
+  .btn-sm{padding:6px 10px;font-size:.72rem;}
+  .section{padding:56px 16px;}
+  .cards{grid-template-columns:1fr;}
 }
 </style>
 </head>
-
 <body>
 
-<div class="top-buttons">
-<button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
-<button class="support-btn" onclick="openSupport()">Support</button>
+<nav class="top-bar">
+  <div class="top-bar-logo">SARFEES</div>
+  <div class="top-bar-actions">
+    <button class="btn-sm" onclick="toggleLang()" id="langBtn">EN</button>
+    <button class="btn-sm" onclick="openSupport()" id="supportBtnLabel">Support</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <h1>SARFEES</h1>
+  <div class="hero-tagline" id="heroTagline">SARMAD PROTOCOL</div>
+  <div class="hero-divider"></div>
+  <p class="hero-desc" id="introText"></p>
+  <a href="https://t.me/SarfeesBot" target="_blank" class="btn-primary" id="joinBtn"></a>
+</section>
+
+<!-- S1 -->
+<div class="section fade-in">
+  <div class="section-line"></div>
+  <div class="section-label" id="s1Label"></div>
+  <h2 id="s1Title"></h2>
+  <div id="s1Body"></div>
 </div>
 
-<section class="center">
-<h1>SARFEES</h1>
-<p id="introText"></p>
-<a href="https://t.me/SarfeesBot" target="_blank" class="button" id="joinBtn"></a>
-</section>
-
-<section>
-<h2 id="section1Title"></h2>
-<div id="section1Text"></div>
-</section>
-
-<section>
-<h2 id="section2Title"></h2>
-<div id="section2Text"></div>
-</section>
-
-<section>
-<h2 id="section3Title"></h2>
-<div id="section3Text"></div>
-</section>
-
-<div class="footer">
-<p>SARMAD PROTOCOL</p>
-<p>Benefit for Everyone.</p>
-<p>Coming Strong Soon.</p>
+<!-- S2 -->
+<div class="section fade-in">
+  <div class="section-line"></div>
+  <div class="section-label" id="s2Label"></div>
+  <h2 id="s2Title"></h2>
+  <div id="s2Body"></div>
 </div>
 
-<!-- Support Modal -->
+<!-- S3 -->
+<div class="section fade-in">
+  <div class="section-line"></div>
+  <div class="section-label" id="s3Label"></div>
+  <h2 id="s3Title"></h2>
+  <div id="s3Body"></div>
+</div>
+
+<!-- CLOSING -->
+<div class="closing fade-in">
+  <h2 id="closingTitle"></h2>
+  <p id="closingP1"></p>
+  <p id="closingP2"></p>
+  <p id="closingP3"></p>
+  <a href="https://t.me/SarfeesBot" target="_blank" class="btn-primary" id="joinBtn2"></a>
+</div>
+
+<div class="footer">SARMAD PROTOCOL &nbsp;·&nbsp; <span id="footerText"></span></div>
+
+<!-- MODAL -->
 <div class="modal" id="supportModal">
-<div class="modal-box">
-<h3>Support</h3>
-<input type="text" id="supportName" placeholder="Your Name (optional)">
-<textarea id="supportMessage" rows="4" placeholder="Write your message..."></textarea>
-<button onclick="sendSupport()">Send Message</button>
-<button onclick="closeSupport()" style="margin-top:8px;background:#333;color:#aaa;">Cancel</button>
-</div>
+  <div class="modal-box">
+    <h3 id="modalTitle">SUPPORT</h3>
+    <input type="text" id="supportName">
+    <textarea id="supportMessage" rows="5"></textarea>
+    <button class="btn-send" onclick="sendSupport()" id="sendBtn">Send</button>
+    <button class="btn-cancel" onclick="closeSupport()" id="cancelBtn">Cancel</button>
+  </div>
 </div>
 
 <script>
-// Firebase Config
-const firebaseConfig = {
-    apiKey: "AIzaSyBVyEPs_xvz9Oryk-jpLev4ja7Sb1P6RaM",
-    authDomain: "sarmad-web.firebaseapp.com",
-    projectId: "sarmad-web",
-    storageBucket: "sarmad-web.firebasestorage.app",
-    messagingSenderId: "687271413195",
-    appId: "1:687271413195:web:f9564027c56ed0efb7e24e"
-};
+const firebaseConfig={apiKey:"AIzaSyBVyEPs_xvz9Oryk-jpLev4ja7Sb1P6RaM",authDomain:"sarmad-web.firebaseapp.com",projectId:"sarmad-web",storageBucket:"sarmad-web.firebasestorage.app",messagingSenderId:"687271413195",appId:"1:687271413195:web:f9564027c56ed0efb7e24e"};
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const db=firebase.firestore();
 
-// Support
-function openSupport(){
-    document.getElementById("supportModal").style.display="flex";
-}
-function closeSupport(){
-    document.getElementById("supportModal").style.display="none";
-}
+function openSupport(){document.getElementById("supportModal").style.display="flex";}
+function closeSupport(){document.getElementById("supportModal").style.display="none";}
 function sendSupport(){
-    const name=document.getElementById("supportName").value || "Anonymous";
-    const message=document.getElementById("supportMessage").value;
-    if(!message){alert("Please write a message");return;}
-    db.collection("support_messages").add({
-        name:name,
-        message:message,
-        created_at:new Date(),
-        source:"Sarfees"
-    }).then(()=>{
-        alert("Message sent successfully.");
-        closeSupport();
-        document.getElementById("supportMessage").value="";
-    });
+  const name=document.getElementById("supportName").value||"Anonymous";
+  const message=document.getElementById("supportMessage").value;
+  if(!message){alert(currentLang==="ar"?"الرجاء كتابة رسالة":"Please write a message");return;}
+  db.collection("support_messages").add({name,message,created_at:new Date(),source:"Sarfees"}).then(()=>{
+    alert(currentLang==="ar"?"تم إرسال رسالتك بنجاح.":"Message sent successfully.");
+    closeSupport();
+    document.getElementById("supportMessage").value="";
+  });
 }
-
-// Language System
-let currentLang="ar";
 
 const content={
 ar:{
-intro:"تنقل يومي أوفر. دخل إضافي حقيقي. نظام بسيط وواضح.",
-join:"الدخول إلى بوت سرفيس",
-s1:"اكسب 20٪ من نمو الشبكة",
-s1t:"عندما تدعو شخصاً للانضمام، تحصل على 20٪ من أي مبلغ يقوم بتحويله مقابل أيام الاستخدام.",
-s2:"لماذا سرفيس أوفر دائماً؟",
-s2t:"السعر يظهر لك قبل تأكيد الرحلة. لا عداد. لا مفاجآت.",
-s3:"لماذا سرفيس أفضل للكباتن؟",
-s3t:"لا عمولة. الأجرة كاملة لك. اشتراك شهري 5 دولارات فقط."
+  intro:"تنقل يومي أوفر. دخل إضافي حقيقي. نظام بسيط وواضح.",
+  join:"الدخول إلى بوت سرفيس",
+  footerText:"Benefit for Everyone.",
+  s1Label:"برنامج الإحالة",
+  s1Title:"اكسب 20٪ من نمو الشبكة",
+  s1Body:`<p>في سرفيس، المستخدمون ليسوا مجرد ركاب أو كباتن…<br><strong style="color:#fff">هم شركاء نمو.</strong></p>
+<p>عندما تدعو شخصاً للانضمام إلى سرفيس، تحصل على <strong style="color:#fff">20٪ من أي مبلغ</strong> يقوم بتحويله داخل التطبيق مقابل أيام الاستخدام.</p>
+<p>كل 5 دولارات تمنحه <strong style="color:#fff">30 يوماً</strong> من الاستخدام. وإذا قام بالتحويل، أنت تحصل على 20٪ منه مباشرة. طالما هو يستخدم التطبيق… أنت تستفيد. وإذا توقف، تتوقف الأرباح تلقائياً.</p>
+<div class="example-box">
+<div class="ex-label">مثال عملي</div>
+<div class="ex-row"><span>شخص واحد يحوّل 10$</span><span class="ex-val">+2$</span></div>
+<div class="ex-row"><span>100 شخص يحوّلون 5$ شهرياً</span><span class="ex-val">+100$ / شهر</span></div>
+<div class="ex-row"><span>الاستخدام الفعلي هو ما يصنع العائد</span><span class="ex-val">✓</span></div>
+</div>
+<p style="margin-top:28px;"><strong style="color:#fff">فرصة المنضمين الأوائل:</strong><br>
+الاشتراك حالياً <strong style="color:#fff">5 دولارات = 30 يوم</strong> استخدام كامل — للمنضمين الأوائل فقط.<br>
+كل سنة يزداد الاشتراك دولاراً واحداً — لكن من يشترك بسعر معين، <strong style="color:#fff">يبقى سعره ثابتاً للأبد</strong> طالما لم يتوقف.<br>
+الانضمام المبكر يعني تثبيت السعر مدى الحياة.</p>`,
+  s2Label:"للركاب",
+  s2Title:"لماذا سرفيس أوفر دائماً للركاب؟",
+  s2Body:`<p>سرفيس مصمم ليكون <strong style="color:#fff">أرخص دائماً</strong> من تطبيقات التوصيل الفردي.</p>
+<div class="cards">
+<div class="card"><span class="card-icon">🏷️</span><h3>سعر ثابت مسبق</h3><p>السعر يظهر قبل تأكيد الرحلة. ما تراه هو ما تدفعه.</p></div>
+<div class="card"><span class="card-icon">🚫</span><h3>لا عداد</h3><p>لا عدادات تشغّل. لا أسعار تتغير أثناء الرحلة.</p></div>
+<div class="card"><span class="card-icon">⚡</span><h3>لا مفاوضات</h3><p>لا زيادات مفاجئة. لا ضغط ولا إحراج.</p></div>
+<div class="card"><span class="card-icon">📅</span><h3>تنقل يومي منطقي</h3><p>سعر ثابت ومنطقي كل يوم. بدون مفاجآت.</p></div>
+</div>`,
+  s3Label:"للكباتن",
+  s3Title:"لماذا سرفيس أفضل للكباتن؟",
+  s3Body:`<p>في سرفيس، الكابتن هو الأولوية.</p>
+<ul class="feature-list">
+<li><span class="check">✔</span><span>لا توجد عمولة على كل رحلة — الأجرة كاملة لك يا كابتن</span></li>
+<li><span class="check">✔</span><span>اشتراك شهري <strong style="color:#fff">5 دولارات فقط</strong> — أقل من دخل يوم واحد</span></li>
+<li><span class="check">✔</span><span>مسموح أن يكون عمر السيارة حتى <strong style="color:#fff">25 سنة</strong></span></li>
+<li><span class="check">✔</span><span>مسموح للباصات الصغيرة العمل على المنصة</span></li>
+<li><span class="check">✔</span><span>مسموح لسيارات البيك أب العمل</span></li>
+</ul>
+<p style="margin-top:22px;color:#777;">الهدف هو توسيع فرص العمل، وليس وضع قيود تعجيزية.</p>`,
+  closingTitle:"سرفيس ليس مجرد تطبيق نقل.",
+  closingP1:"هو تنقل أوفر للركاب.",
+  closingP2:"وأعدل للكباتن.",
+  closingP3:"وفرصة نمو حقيقية لمن يساهم في نشره.",
+  joinBtn:"الدخول إلى بوت سرفيس",
+  supportBtn:"الدعم",modalTitle:"الدعم الفني",sendBtn:"إرسال",cancelBtn:"إلغاء",
+  namePlaceholder:"اسمك (اختياري)",msgPlaceholder:"اكتب رسالتك..."
 },
 en:{
-intro:"Cheaper daily rides. Real extra income. Simple and clear system.",
-join:"Launch Sarfees Bot",
-s1:"Earn 20% From Network Growth",
-s1t:"When you invite someone, you earn 20% of any amount they convert for usage days.",
-s2:"Why Sarfees Is Always Cheaper",
-s2t:"Price is shown before confirmation. No meter. No surprises.",
-s3:"Why Sarfees Is Better For Captains",
-s3t:"No commission. Full fare is yours. Only $5 monthly subscription."
+  intro:"Cheaper daily rides. Real extra income. Simple and clear system.",
+  join:"Launch Sarfees Bot",
+  footerText:"Benefit for Everyone.",
+  s1Label:"Referral Program",
+  s1Title:"Earn 20% From Network Growth",
+  s1Body:`<p>In Sarfees, users are not just passengers or captains…<br><strong style="color:#fff">They are growth partners.</strong></p>
+<p>When you invite someone to join Sarfees, you earn <strong style="color:#fff">20% of any amount</strong> they transfer inside the app in exchange for usage days.</p>
+<p>Every $5 gives them <strong style="color:#fff">30 days</strong> of use. If they transfer, you immediately get 20%. As long as they keep using the app… you keep earning. If they stop, the earnings stop automatically.</p>
+<div class="example-box">
+<div class="ex-label">Simple Example</div>
+<div class="ex-row"><span>One person transfers $10</span><span class="ex-val">+$2</span></div>
+<div class="ex-row"><span>100 people transfer $5/month</span><span class="ex-val">+$100 / mo</span></div>
+<div class="ex-row"><span>Actual usage is what creates the return</span><span class="ex-val">✓</span></div>
+</div>
+<p style="margin-top:28px;"><strong style="color:#fff">Early Joiners Opportunity:</strong><br>
+Current subscription is <strong style="color:#fff">$5 = 30 days</strong> of full access — for early joiners only.<br>
+Every year the subscription increases by one dollar — but whoever subscribes at a certain price <strong style="color:#fff">keeps that price forever</strong>, as long as they don't stop.<br>
+Joining early means locking your price for life.</p>`,
+  s2Label:"For Passengers",
+  s2Title:"Why Sarfees Is Always Cheaper for Passengers?",
+  s2Body:`<p>Sarfees is built to always be <strong style="color:#fff">cheaper</strong> than individual ride-hailing apps.</p>
+<div class="cards">
+<div class="card"><span class="card-icon">🏷️</span><h3>Fixed Upfront Price</h3><p>Price is shown before you confirm the ride. What you see is what you pay.</p></div>
+<div class="card"><span class="card-icon">🚫</span><h3>No Meter</h3><p>No running meters. No prices changing mid-ride.</p></div>
+<div class="card"><span class="card-icon">⚡</span><h3>No Negotiations</h3><p>No sudden surges. No pressure, no awkwardness.</p></div>
+<div class="card"><span class="card-icon">📅</span><h3>Sensible Daily Rides</h3><p>A fair, fixed price every single day. No surprises.</p></div>
+</div>`,
+  s3Label:"For Captains",
+  s3Title:"Why Sarfees Is Better for Captains?",
+  s3Body:`<p>In Sarfees, the captain is the priority.</p>
+<ul class="feature-list">
+<li><span class="check">✔</span><span>No commission on any trip — the full fare is yours, captain</span></li>
+<li><span class="check">✔</span><span>Monthly subscription of <strong style="color:#fff">only $5</strong> — less than one day's income</span></li>
+<li><span class="check">✔</span><span>Vehicles up to <strong style="color:#fff">25 years old</strong> are accepted</span></li>
+<li><span class="check">✔</span><span>Small buses are allowed to operate on the platform</span></li>
+<li><span class="check">✔</span><span>Pickup trucks are allowed to operate</span></li>
+</ul>
+<p style="margin-top:22px;color:#777;">The goal is to expand job opportunities, not to impose unreasonable restrictions.</p>`,
+  closingTitle:"Sarfees Is Not Just a Transport App.",
+  closingP1:"It's cheaper rides for passengers.",
+  closingP2:"And fairer earnings for captains.",
+  closingP3:"And a real growth opportunity for those who help spread it.",
+  joinBtn:"Launch Sarfees Bot",
+  supportBtn:"Support",modalTitle:"SUPPORT",sendBtn:"Send",cancelBtn:"Cancel",
+  namePlaceholder:"Your Name (optional)",msgPlaceholder:"Write your message..."
 }
 };
 
+let currentLang="ar";
+
 function applyLang(){
-document.body.classList.toggle("en",currentLang==="en");
-document.getElementById("htmlTag").dir=currentLang==="ar"?"rtl":"ltr";
-document.getElementById("langBtn").innerText=currentLang==="ar"?"EN":"AR";
-document.getElementById("introText").innerText=content[currentLang].intro;
-document.getElementById("joinBtn").innerText=content[currentLang].join;
-document.getElementById("section1Title").innerText=content[currentLang].s1;
-document.getElementById("section1Text").innerText=content[currentLang].s1t;
-document.getElementById("section2Title").innerText=content[currentLang].s2;
-document.getElementById("section2Text").innerText=content[currentLang].s2t;
-document.getElementById("section3Title").innerText=content[currentLang].s3;
-document.getElementById("section3Text").innerText=content[currentLang].s3t;
+  const L=content[currentLang];
+  const isEn=currentLang==="en";
+  document.getElementById("htmlTag").lang=currentLang;
+  document.getElementById("htmlTag").dir=isEn?"ltr":"rtl";
+  document.body.classList.toggle("en",isEn);
+  document.getElementById("langBtn").innerText=isEn?"AR":"EN";
+  document.getElementById("introText").innerText=L.intro;
+  document.getElementById("joinBtn").innerText=L.join;
+  document.getElementById("joinBtn2").innerText=L.joinBtn;
+  document.getElementById("footerText").innerText=L.footerText;
+  document.getElementById("s1Label").innerText=L.s1Label;
+  document.getElementById("s1Title").innerText=L.s1Title;
+  document.getElementById("s1Body").innerHTML=L.s1Body;
+  document.getElementById("s2Label").innerText=L.s2Label;
+  document.getElementById("s2Title").innerText=L.s2Title;
+  document.getElementById("s2Body").innerHTML=L.s2Body;
+  document.getElementById("s3Label").innerText=L.s3Label;
+  document.getElementById("s3Title").innerText=L.s3Title;
+  document.getElementById("s3Body").innerHTML=L.s3Body;
+  document.getElementById("closingTitle").innerText=L.closingTitle;
+  document.getElementById("closingP1").innerText=L.closingP1;
+  document.getElementById("closingP2").innerText=L.closingP2;
+  document.getElementById("closingP3").innerText=L.closingP3;
+  document.getElementById("supportBtnLabel").innerText=L.supportBtn;
+  document.getElementById("modalTitle").innerText=L.modalTitle;
+  document.getElementById("sendBtn").innerText=L.sendBtn;
+  document.getElementById("cancelBtn").innerText=L.cancelBtn;
+  document.getElementById("supportName").placeholder=L.namePlaceholder;
+  document.getElementById("supportMessage").placeholder=L.msgPlaceholder;
 }
 
-function toggleLang(){
-currentLang=currentLang==="ar"?"en":"ar";
-applyLang();
-}
+function toggleLang(){currentLang=currentLang==="ar"?"en":"ar";applyLang();}
+
+const fadeEls=document.querySelectorAll(".fade-in");
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible");});
+},{threshold:0.1});
+fadeEls.forEach(el=>observer.observe(el));
 
 applyLang();
 </script>
-
 </body>
 </html>
