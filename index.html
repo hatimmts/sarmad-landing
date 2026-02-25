@@ -105,6 +105,52 @@ body.en .feature-list{text-align:left;}
   .closing{padding:70px 18px;}
   .modal-box{padding:28px 20px;}
 }
+
+/* ─── FLOATING TELEGRAM BUTTON ─── */
+@keyframes tg-pulse{
+  0%,100%{box-shadow:0 4px 20px rgba(0,136,204,.45);}
+  50%{box-shadow:0 4px 36px rgba(0,136,204,.80),0 0 0 8px rgba(0,136,204,.10);}
+}
+.tg-float{
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  z-index:999;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 22px;
+  background:#0088cc;
+  color:#fff;
+  font-family:'Inter','Tajawal',sans-serif;
+  font-size:.95rem;
+  font-weight:700;
+  letter-spacing:.5px;
+  text-decoration:none;
+  border-radius:50px;
+  box-shadow:0 4px 20px rgba(0,136,204,.45);
+  animation:tg-pulse 3.5s ease-in-out infinite;
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.tg-float:hover{
+  transform:scale(1.06) translateY(-2px);
+  background:#0099dd;
+  box-shadow:0 8px 32px rgba(0,136,204,.65);
+  animation:none;
+}
+.tg-float:active{
+  transform:scale(.96);
+  background:#0077bb;
+  box-shadow:0 2px 10px rgba(0,136,204,.4);
+}
+.tg-float svg{flex-shrink:0;width:22px;height:22px;fill:#fff;}
+
+/* icon-only circle on very small screens */
+@media(max-width:420px){
+  .tg-float{padding:0;width:54px;height:54px;justify-content:center;border-radius:50%;}
+  .tg-float .tg-label{display:none;}
+}
 </style>
 </head>
 <body>
@@ -160,6 +206,15 @@ body.en .feature-list{text-align:left;}
 </div>
 
 <div class="footer">SARMAD PROTOCOL &nbsp;·&nbsp; <span id="footerText"></span></div>
+
+<!-- FLOATING TELEGRAM SUPPORT BUTTON -->
+<a class="tg-float" href="https://t.me/SarfeesSupportBot?start=web" target="_blank" rel="noopener noreferrer" aria-label="Telegram Support">
+  <!-- Telegram SVG icon -->
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L8.32 14.26l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.828.299z"/>
+  </svg>
+  <span class="tg-label" id="tgSupportLabel">Support</span>
+</a>
 
 <!-- MODAL -->
 <div class="modal" id="supportModal">
@@ -319,6 +374,7 @@ function applyLang(){
   document.getElementById("cancelBtn").innerText=L.cancelBtn;
   document.getElementById("supportName").placeholder=L.namePlaceholder;
   document.getElementById("supportMessage").placeholder=L.msgPlaceholder;
+  document.getElementById("tgSupportLabel").innerText=L.supportBtn;
 }
 
 function toggleLang(){currentLang=currentLang==="ar"?"en":"ar";applyLang();}
