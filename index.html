@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlTag">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sarfees | سرفيس — مجاني حتى 31-12-2026</title>
+
+<meta name="description" content="سرفيس منصة تنقل تشاركي عبر تيليجرام. التسجيل والاستخدام مجاني حتى 31 كانون الأول 2026. بعد ذلك: راكب 1 USDT شهرياً، كابتن 0–25 USDT حسب عمر السيارة.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://sarmadprotocol.com/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sarfees | سرفيس — مجاني حتى 31-12-2026">
+<meta property="og:description" content="سجّل الآن مجاناً. تنقل أوفر للركاب ودخل أوضح للكباتن. فترة مجانية حتى نهاية 2026.">
+<meta property="og:url" content="https://sarmadprotocol.com/">
+<meta property="og:site_name" content="Sarfees">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sarfees | سرفيس — مجاني حتى 31-12-2026">
+<meta name="twitter:description" content="سجّل الآن مجاناً. تنقل أوفر للركاب ودخل أوضح للكباتن.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Sarfees",
+  "alternateName": "سرفيس",
+  "operatingSystem": "Telegram",
+  "applicationCategory": "TransportationApplication",
+  "description": "منصة تنقل تشاركي عبر تيليجرام. مجانية للتسجيل والاستخدام حتى 31 كانون الأول 2026.",
+  "url": "https://sarmadprotocol.com/",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free until 2026-12-31; then riders ~1 USDT/month, drivers 0–25 USDT/month by vehicle age"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Tajawal:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg0: #07090c;
+    --bg1: #10161d;
+    --ink: #f4f1ea;
+    --muted: #a8b0ba;
+    --line: rgba(244, 241, 234, 0.12);
+    --accent: #d4ff4f;
+    --accent-ink: #0b1200;
+    --glow: rgba(212, 255, 79, 0.18);
+    --card: rgba(255, 255, 255, 0.03);
+    --max: 920px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, var(--glow), transparent 55%),
+      radial-gradient(900px 500px at 10% 20%, rgba(80, 140, 255, 0.12), transparent 50%),
+      linear-gradient(180deg, var(--bg0), var(--bg1) 45%, #050607);
+    font-family: 'Tajawal', sans-serif;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+  body.en { font-family: 'Space Grotesk', sans-serif; line-height: 1.55; }
+
+  .wrap { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto; }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0 0;
+  }
+  .brand-mark {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+  #langBtn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+  }
+  #langBtn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Hero */
+  .hero {
+    padding: 4.5rem 0 3rem;
+    text-align: center;
+    position: relative;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 8% 5% auto;
+    height: 55%;
+    background:
+      linear-gradient(120deg, transparent 20%, rgba(212,255,79,0.06), transparent 80%),
+      repeating-linear-gradient(-18deg, transparent 0 14px, rgba(255,255,255,0.02) 14px 15px);
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  }
+  .hero h1 {
+    position: relative;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.6rem, 8vw, 4.4rem);
+    letter-spacing: 0.08em;
+    margin: 0 0 0.35rem;
+    text-shadow: 0 0 40px var(--glow);
+    animation: rise 0.8s ease both;
+  }
+  .protocol {
+    position: relative;
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 600;
+    animation: rise 0.9s ease both;
+  }
+  .free-banner {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto 1.4rem;
+    padding: 0.85rem 1.25rem;
+    border: 1px solid rgba(212, 255, 79, 0.45);
+    background: linear-gradient(135deg, rgba(212,255,79,0.16), rgba(212,255,79,0.04));
+    border-radius: 14px;
+    max-width: 34rem;
+    animation: pulseGlow 3.2s ease-in-out infinite, rise 1s ease both;
+  }
+  .free-banner strong {
+    display: block;
+    color: var(--accent);
+    font-size: clamp(1.15rem, 3.2vw, 1.45rem);
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+  }
+  .free-banner span {
+    color: var(--ink);
+    font-size: 0.98rem;
+    opacity: 0.92;
+  }
+  .intro {
+    position: relative;
+    max-width: 36rem;
+    margin: 0 auto 1.75rem;
+    color: var(--muted);
+    font-size: 1.08rem;
+    animation: rise 1.1s ease both;
+  }
+  .cta-row {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    animation: rise 1.2s ease both;
+  }
+  a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.95rem 1.6rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 10px 30px rgba(212, 255, 79, 0.2);
+  }
+  a.btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(212, 255, 79, 0.28); }
+  a.btn.ghost {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--line);
+    box-shadow: none;
+  }
+  a.btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .section {
+    margin: 3.5rem auto;
+    padding: 1.75rem 0;
+    border-top: 1px solid var(--line);
+    text-align: start;
+  }
+  .section h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 1.55rem);
+    margin: 0 0 1rem;
+    letter-spacing: 0.04em;
+  }
+  .section p { color: var(--muted); margin: 0 0 0.85rem; }
+  .section p strong { color: var(--ink); }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.65rem;
+  }
+  li {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+  }
+
+  .pricing-grid {
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 700px) {
+    .pricing-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .price-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 1.15rem 1.2rem;
+  }
+  .price-card h3 {
+    margin: 0 0 0.45rem;
+    font-size: 1.05rem;
+  }
+  .price-card .amt {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .closing {
+    text-align: center;
+    padding-bottom: 5rem;
+  }
+  .closing h2 { margin-bottom: 0.75rem; }
+  .closing p { max-width: 28rem; margin-inline: auto; }
+
+  .tg-float {
+    position: fixed;
+    bottom: 22px;
+    inset-inline-end: 22px;
+    background: #1a9edb;
+    color: #fff;
+    padding: 0.85rem 1.2rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    z-index: 20;
+    transition: transform 0.2s ease;
+  }
+  .tg-float:hover { transform: translateY(-2px); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 1.5rem 0 2rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  [data-i18n].hidden { display: none !important; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 255, 79, 0.15); }
+    50% { box-shadow: 0 0 28px 2px rgba(212, 255, 79, 0.22); }
+  }
+
+  @media (max-width: 640px) {
+    .hero { padding-top: 3rem; }
+    .tg-float { bottom: 16px; inset-inline-end: 16px; font-size: 0.9rem; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="brand-mark">SARFEES</div>
+    <button type="button" onclick="toggleLang()" id="langBtn" aria-label="Switch language">EN</button>
+  </nav>
+
+  <header class="hero">
+    <h1>SARFEES</h1>
+    <p class="protocol">SARMAD PROTOCOL</p>
+
+    <div class="free-banner">
+      <strong data-i18n="ar">🎉 مجاني للتسجيل والاستخدام حتى 31-12-2026</strong>
+      <strong data-i18n="en" class="hidden">🎉 Free to register &amp; use until 31-12-2026</strong>
+      <span data-i18n="ar">بدون رسوم اشتراك طوال الفترة المجانية — اركب وقد سيارتك الآن.</span>
+      <span data-i18n="en" class="hidden">Zero subscription fees during the free period — ride and drive now.</span>
+    </div>
+
+    <p class="intro" data-i18n="ar">
+      تنقل يومي أوفر للركاب. دخل أوضح للكباتن. نظام بسيط عبر تيليجرام — بدون تنزيل تطبيق.
+    </p>
+    <p class="intro hidden" data-i18n="en">
+      Cheaper daily rides for passengers. Clearer income for captains. Simple on Telegram — no app download.
+    </p>
+
+    <div class="cta-row">
+      <a href="https://t.me/SarfeesBot" target="_blank" rel="noopener" class="btn">
+        <span data-i18n="ar">الدخول إلى بوت سرفيس</span>
+        <span data-i18n="en" class="hidden">Open Sarfees Bot</span>
+      </a>
+      <a href="#pricing" class="btn ghost">
+        <span data-i18n="ar">ماذا بعد الفترة المجانية؟</span>
+        <span data-i18n="en" class="hidden">After the free period?</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="section" id="pricing">
+    <h2 data-i18n="ar">الأسعار</h2>
+    <h2 data-i18n="en" class="hidden">Pricing</h2>
+
+    <p data-i18n="ar">
+      <strong>الآن وحتى 31 كانون الأول 2026:</strong> التسجيل والاستخدام مجاني بالكامل للركاب والكباتن.
+    </p>
+    <p data-i18n="en" class="hidden">
+      <strong>Now until 31 December 2026:</strong> registration and use are completely free for riders and captains.
+    </p>
+    <p data-i18n="ar">
+      وبعد انتهاء الفترة المجانية يبقى سرفيس شبه مجاني:
+    </p>
+    <p data-i18n="en" class="hidden">
+      After the free period ends, Sarfees stays almost free:
+    </p>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3 data-i18n="ar">🧳 الركاب</h3>
+        <h3 data-i18n="en" class="hidden">🧳 Riders</h3>
+        <div class="amt" data-i18n="ar">1 دولار لكل شهر</div>
+        <div class="amt hidden" data-i18n="en">1 USDT / month</div>
+        <p data-i18n="ar" style="margin:0">اشتراك شهري بسيط بعد 2026 — بدون عداد وبدون عمولة مخفية على كل رحلة.</p>
+        <p data-i18n="en" class="hidden" style="margin:0">Simple monthly plan after 2026 — no meter, no hidden per-trip platform cut.</p>
+      </div>
+      <div class="price-card">
+        <h3 data-i18n="ar">🚗 الكباتن</h3>
+        <h3 data-i18n="en" class="hidden">🚗 Captains</h3>
+        <div class="amt" data-i18n="ar">0–25 دولار لكل شهر</div>
+        <div class="amt hidden" data-i18n="en">0–25 USDT / month</div>
+        <p data-i18n="ar" style="margin:0">حسب عمر السيارة: <strong>1 دولار عن كل سنة</strong> من عمر المركبة. لا عمولة على كل رحلة.</p>
+        <p data-i18n="en" class="hidden" style="margin:0">Based on car age: <strong>1 USDT per year</strong> of vehicle age. No commission on every trip.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 data-i18n="ar">برنامج الإحالة</h2>
+    <h2 data-i18n="en" class="hidden">Referral program</h2>
+    <p data-i18n="ar">في سرفيس، المستخدمون ليسوا مجرد ركاب أو كباتن… هم شركاء نمو.</p>
+    <p data-i18n="en" class="hidden">On Sarfees, users aren’t just riders or captains — they’re growth partners.</p>
+    <p data-i18n="ar">عند دعوتك لأي شخص، يحصل على <strong>10 أيام مجانية</strong>، وتحصل أنت على <strong>20٪</strong> من مشترياته لأيام الاستخدام (SRMD) داخل التطبيق.</p>
+    <p data-i18n="en" class="hidden">When you invite someone, they get <strong>10 free days</strong>, and you earn <strong>20%</strong> of their in-app usage-day (SRMD) purchases.</p>
+    <p data-i18n="ar">يمكنك استخدام أرباحك داخل التطبيق، أو سحبها كاش بعملة <strong>USDT</strong> إذا تجاوز رصيدك <strong>10 دولارات</strong> وتحقّقت الشروط والأحكام.</p>
+    <p data-i18n="en" class="hidden">You can use your earnings inside the app, or withdraw them as cash in <strong>USDT</strong> once your balance exceeds <strong>$10</strong> and the terms &amp; conditions are met.</p>
+    <p data-i18n="ar">طالما يستخدم التطبيق… أنت تستفيد.</p>
+    <p data-i18n="en" class="hidden">As long as they keep using the app… you benefit.</p>
+  </section>
+
+  <section class="section">
+    <h2 data-i18n="ar">للركاب</h2>
+    <h2 data-i18n="en" class="hidden">For riders</h2>
+    <ul>
+      <li data-i18n="ar">✔ سعر ثابت مسبق — بدون عداد</li>
+      <li data-i18n="en" class="hidden">✔ Fixed price upfront — no meter</li>
+      <li data-i18n="ar">✔ بدون مفاوضات مرهقة</li>
+      <li data-i18n="en" class="hidden">✔ No exhausting negotiations</li>
+      <li data-i18n="ar">✔ تنقل يومي منطقي عبر تيليجرام</li>
+      <li data-i18n="en" class="hidden">✔ Practical daily rides on Telegram</li>
+      <li data-i18n="ar">✔ اشتراك شهري بعد الفترة المجانية: 1 دولار لكل شهر</li>
+      <li data-i18n="en" class="hidden">✔ After free period: monthly subscription of 1 USDT / month</li>
+      <li data-i18n="ar">✔ مجاني تماماً حتى 31-12-2026</li>
+      <li data-i18n="en" class="hidden">✔ Completely free until 31-12-2026</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2 data-i18n="ar">للكباتن</h2>
+    <h2 data-i18n="en" class="hidden">For captains</h2>
+    <ul>
+      <li data-i18n="ar">✔ لا عمولة على كل رحلة</li>
+      <li data-i18n="en" class="hidden">✔ No commission on every trip</li>
+      <li data-i18n="ar">✔ اشتراك لاحق مرن حسب عمر السيارة (0–25 دولار لكل شهر)</li>
+      <li data-i18n="en" class="hidden">✔ Later flexible plan by car age (0–25 USDT / month)</li>
+      <li data-i18n="ar">✔ قبول سيارات حتى 25 سنة</li>
+      <li data-i18n="en" class="hidden">✔ Cars up to 25 years accepted</li>
+      <li data-i18n="ar">✔ قبول الباصات الصغيرة وسيارات البيك أب</li>
+      <li data-i18n="en" class="hidden">✔ Mini-buses and pickups accepted</li>
+      <li data-i18n="ar">✔ مجاني تماماً حتى 31-12-2026</li>
+      <li data-i18n="en" class="hidden">✔ Completely free until 31-12-2026</li>
+    </ul>
+  </section>
+
+  <section class="section closing">
+    <h2 data-i18n="ar">سرفيس ليس مجرد تطبيق نقل.</h2>
+    <h2 data-i18n="en" class="hidden">Sarfees is more than a transport app.</h2>
+    <p data-i18n="ar">هو تنقل أوفر للركاب. وأعدل للكباتن. وفرصة نمو حقيقية — ابدأ مجاناً قبل نهاية 2026.</p>
+    <p data-i18n="en" class="hidden">Cheaper rides for passengers. Fairer for captains. Real growth — start free before the end of 2026.</p>
+    <div class="cta-row" style="margin-top:1.5rem">
+      <a href="https://t.me/SarfeesBot" target="_blank" rel="noopener" class="btn">
+        <span data-i18n="ar">سجّل مجاناً الآن</span>
+        <span data-i18n="en" class="hidden">Register free now</span>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span data-i18n="ar">سرفيس · Sarmad Protocol · الفترة المجانية حتى 31-12-2026</span>
+    <span data-i18n="en" class="hidden">Sarfees · Sarmad Protocol · Free period until 31-12-2026</span>
+  </footer>
+</div>
+
+<a class="tg-float" href="https://t.me/SarfeesSupportBot?start=web" target="_blank" rel="noopener">
+  <span data-i18n="ar">دعم عبر تيليجرام</span>
+  <span data-i18n="en" class="hidden">Telegram support</span>
+</a>
+
+<script>
+function toggleLang() {
+  const html = document.getElementById("htmlTag");
+  const toEn = html.lang === "ar";
+  html.lang = toEn ? "en" : "ar";
+  html.dir = toEn ? "ltr" : "rtl";
+  document.body.classList.toggle("en", toEn);
+  document.getElementById("langBtn").textContent = toEn ? "AR" : "EN";
+
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const show = el.getAttribute("data-i18n") === (toEn ? "en" : "ar");
+    el.classList.toggle("hidden", !show);
+  });
+}
+</script>
+
+</body>
+</html>
